@@ -1,0 +1,25 @@
+{
+  "name": "orphebot",
+  "version": "1.0.0",
+  "description": "",
+  "main": ".eslintrc.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kosinaz/orphebot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kosinaz/orphebot/issues"
+  },
+  "homepage": "https://github.com/kosinaz/orphebot#readme",
+  "devDependencies": {
+    "eslint": "^8.12.0"
+  }
+}
