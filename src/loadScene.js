@@ -1,12 +1,16 @@
 import Phaser from './phaser.js';
-import MenuScene from './menuScene.js';
+import LevelScene from './levelScene.js';
 
 export default class LoadScene extends Phaser.Scene {
-  preload() {
-    
+  preload() {    
+    this.load.image('tileset', 'image/tileset.png');
+    this.load.spritesheet('bots', 'image/bots.png', { 
+      frameWidth: 64, 
+      frameHeight: 128,
+    });
   }
   create() {
-    this.scene.add('MenuScene', MenuScene);
-    this.scene.start('MenuScene');
+    this.scene.add('LevelScene', LevelScene);
+    this.scene.start('LevelScene');
   }
-}
+} 
