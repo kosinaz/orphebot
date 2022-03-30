@@ -7,8 +7,17 @@ export default class Elevabot extends Phaser.Physics.Arcade.Sprite {
     this.anims.create({
       key: 'walk',
       frames: this.anims.generateFrameNumbers('bots', {
-        start: 100,
-        end: 107,
+        start: 196,
+        end: 203,
+      }),
+      frameRate: 16,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'walkBack',
+      frames: this.anims.generateFrameNumbers('bots', {
+        start: 208,
+        end: 215,
       }),
       frameRate: 16,
       repeat: -1
@@ -16,8 +25,17 @@ export default class Elevabot extends Phaser.Physics.Arcade.Sprite {
     this.anims.create({
       key: 'idle',
       frames: this.anims.generateFrameNumbers('bots', {
-        start: 96,
-        end: 99,
+        start: 192,
+        end: 195,
+      }),
+      frameRate: 8,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'idleBack',
+      frames: this.anims.generateFrameNumbers('bots', {
+        start: 204,
+        end: 207,
       }),
       frameRate: 8,
       repeat: -1
@@ -33,12 +51,21 @@ export default class Elevabot extends Phaser.Physics.Arcade.Sprite {
       if (this.body.blocked.left) {
         this.setFlipX(false);
       }
+      if (this.scene.player.x > this.x) {
+        this.anims.play('walkBack', true);
+      } else {
+        this.anims.play('walk', true);
+      }
     } else {
       this.setVelocityX(this.speed);
       if (this.body.blocked.right) {
         this.setFlipX(true);
       }
+      if (this.scene.player.x > this.x) {
+        this.anims.play('walk', true);
+      } else {
+        this.anims.play('walkBack', true);
+      }
     }
-    this.anims.play('walk', true);
   }
 }

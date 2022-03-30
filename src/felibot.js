@@ -7,8 +7,17 @@ export default class Felibot extends Phaser.Physics.Arcade.Sprite {
     this.anims.create({
       key: 'walk',
       frames: this.anims.generateFrameNumbers('bots', {
-        start: 88,
-        end: 95,
+        start: 172,
+        end: 179,
+      }),
+      frameRate: 32,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'walkBack',
+      frames: this.anims.generateFrameNumbers('bots', {
+        start: 184,
+        end: 191,
       }),
       frameRate: 32,
       repeat: -1
@@ -16,7 +25,15 @@ export default class Felibot extends Phaser.Physics.Arcade.Sprite {
     this.anims.create({
       key: 'jump',
       frames: this.anims.generateFrameNumbers('bots', {
-        frames: [91],
+        frames: [175],
+      }),
+      frameRate: 8,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'jumpBack',
+      frames: this.anims.generateFrameNumbers('bots', {
+        frames: [187],
       }),
       frameRate: 8,
       repeat: -1
@@ -24,8 +41,17 @@ export default class Felibot extends Phaser.Physics.Arcade.Sprite {
     this.anims.create({
       key: 'idle',
       frames: this.anims.generateFrameNumbers('bots', {
-        start: 84,
-        end: 87,
+        start: 168,
+        end: 171,
+      }),
+      frameRate: 8,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'idleBack',
+      frames: this.anims.generateFrameNumbers('bots', {
+        start: 180,
+        end: 183,
       }),
       frameRate: 8,
       repeat: -1
@@ -51,12 +77,24 @@ export default class Felibot extends Phaser.Physics.Arcade.Sprite {
     } 
     if (this.body.blocked.down) {
       if (this.body.velocity.x) {
-        this.anims.play('walk', true);
+        if (this.scene.input.activePointer.x > 960 == this.flipX) {
+          this.anims.play('walkBack', true);
+        } else {
+          this.anims.play('walk', true);
+        }
       } else {
-        this.anims.play('idle', true);
+        if (this.scene.input.activePointer.x > 960 == this.flipX) {
+          this.anims.play('idleBack', true);
+        } else {
+          this.anims.play('idle', true);
+        }
       }
     } else {
-      this.anims.play('jump', true);
+      if (this.scene.input.activePointer.x > 960 == this.flipX) {
+        this.anims.play('jumpBack', true);
+      } else {
+        this.anims.play('jump', true);
+      }
     }    
   }
 }

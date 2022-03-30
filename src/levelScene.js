@@ -15,14 +15,14 @@ export default class LevelScene extends Phaser.Scene {
     fg.setCollisionBetween(0, 200);
     this.player = map.createFromObjects('obj', {
       classType: Felibot,
-      frame: 84,
+      frame: 172,
       gid: 253,
       key: 'bots',
     })[0];
     this.physics.add.collider(this.player, fg);
     this.elevabots = map.createFromObjects('obj', {
       classType: Elevabot,
-      frame: 96,
+      frame: 192,
       gid: 265,
       key: 'bots',
     });
