@@ -58,6 +58,7 @@ export default class Felibot extends Phaser.Physics.Arcade.Sprite {
     });
     this.anims.play('idle');
     this.speed = 320;
+    this.cooldown = 0;
     this.setSize(64, 92);
     this.setOffset(0, 36);
   }
@@ -95,6 +96,13 @@ export default class Felibot extends Phaser.Physics.Arcade.Sprite {
       } else {
         this.anims.play('jump', true);
       }
-    }    
+    }
+    this.cooldown += 1;
+    if (this.scene.input.activePointer.leftButtonDown() && this.cooldown > 30) {
+      this.cooldown = 0;
+      const projectile = this.scene.physics.add.sprite(this.x, this.y, 'sprites', 'projectileGreen');
+      projectile.setGravityY(-2100);
+      this.scene.physics.moveTo(projectile, this.scene.input.activePointer.worldX, this.scene.input.activePointer.worldY, 1000);
+    }     
   }
 }

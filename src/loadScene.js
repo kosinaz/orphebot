@@ -8,6 +8,7 @@ export default class LoadScene extends Phaser.Scene {
       frameWidth: 64, 
       frameHeight: 128,
     });
+    this.load.atlas('sprites', 'image/sprites.png', 'image/sprites.json');
   }
   create() {
     this.scene.add('LevelScene', LevelScene);

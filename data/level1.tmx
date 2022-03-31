@@ -6,8 +6,8 @@
  <tileset firstgid="1" name="tileset" tilewidth="64" tileheight="64" tilecount="168" columns="12">
   <image source="../image/tileset.png" width="768" height="896"/>
  </tileset>
- <tileset firstgid="169" name="bots" tilewidth="64" tileheight="128" tilecount="108" columns="12">
-  <image source="../image/bots.png" width="768" height="1152"/>
+ <tileset firstgid="169" name="bots" tilewidth="64" tileheight="128" tilecount="216" columns="24">
+  <image source="../image/bots.png" width="1536" height="1152"/>
  </tileset>
  <layer id="1" name="fg" width="120" height="68">
   <data encoding="csv">
@@ -82,9 +82,9 @@
 </data>
  </layer>
  <objectgroup id="2" name="obj">
-  <object id="38" gid="265" x="3904" y="3584" width="64" height="128"/>
-  <object id="39" gid="265" x="2944" y="3584" width="64" height="128"/>
-  <object id="40" gid="265" x="2304" y="3520" width="64" height="128"/>
-  <object id="41" gid="253" x="3392" y="3520" width="64" height="128"/>
+  <object id="38" gid="361" x="3904" y="3584" width="64" height="128"/>
+  <object id="39" gid="361" x="2944" y="3584" width="64" height="128"/>
+  <object id="40" gid="361" x="2304" y="3520" width="64" height="128"/>
+  <object id="41" gid="337" x="3392" y="3520" width="64" height="128"/>
  </objectgroup>
 </map>
