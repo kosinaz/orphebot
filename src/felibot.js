@@ -56,6 +56,22 @@ export default class Felibot extends Phaser.Physics.Arcade.Sprite {
       frameRate: 8,
       repeat: -1
     });
+    this.anims.create({
+      key: 'shoot',
+      frames: this.anims.generateFrameNumbers('bots', {
+        frames: [168],
+      }),
+      frameRate: 8,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'shootBack',
+      frames: this.anims.generateFrameNumbers('bots', {
+        frames: [180],
+      }),
+      frameRate: 8,
+      repeat: -1
+    });
     this.anims.play('idle');
     this.speed = 320;
     this.cooldown = 0;
@@ -84,10 +100,18 @@ export default class Felibot extends Phaser.Physics.Arcade.Sprite {
           this.anims.play('walk', true);
         }
       } else {
-        if (this.scene.input.activePointer.x > 960 == this.flipX) {
-          this.anims.play('idleBack', true);
+        if (this.scene.input.activePointer.leftButtonDown()) {
+          if (this.scene.input.activePointer.x > 960 == this.flipX) {
+            this.anims.play('shootBack', true);
+          } else {
+            this.anims.play('shoot', true);
+          }
         } else {
-          this.anims.play('idle', true);
+          if (this.scene.input.activePointer.x > 960 == this.flipX) {
+            this.anims.play('idleBack', true);
+          } else {
+            this.anims.play('idle', true);
+          }
         }
       }
     } else {
@@ -98,11 +122,13 @@ export default class Felibot extends Phaser.Physics.Arcade.Sprite {
       }
     }
     this.cooldown += 1;
-    if (this.scene.input.activePointer.leftButtonDown() && this.cooldown > 30) {
+    if (this.scene.input.activePointer.leftButtonDown() && this.cooldown > 10) {
       this.cooldown = 0;
-      const projectile = this.scene.physics.add.sprite(this.x, this.y, 'sprites', 'projectileGreen');
+      const x = this.scene.input.activePointer.x > 960 ? 8 : -8;
+      const projectile = this.scene.physics.add.sprite(this.x + x, this.y - 4, 'sprites', 'projectileGreen');
       projectile.setGravityY(-2100);
-      this.scene.physics.moveTo(projectile, this.scene.input.activePointer.worldX, this.scene.input.activePointer.worldY, 1000);
+      this.scene.physics.moveTo(projectile, this.scene.input.activePointer.worldX, this.scene.input.activePointer.worldY, 500);
+      this.scene.physics.add.collider(projectile, this.scene.fg, (p) => p.disableBody(true, true));
     }     
   }
 }

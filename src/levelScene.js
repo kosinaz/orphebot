@@ -11,22 +11,22 @@ export default class LevelScene extends Phaser.Scene {
       key: 'level1',
     });
     const tileset = map.addTilesetImage('tileset', 'tileset');
-    const fg = map.createLayer('fg', tileset);
-    fg.setCollisionBetween(0, 200);
+    this.fg = map.createLayer('fg', tileset);
+    this.fg.setCollisionBetween(0, 200);
     this.player = map.createFromObjects('obj', {
       classType: Felibot,
       frame: 172,
       gid: 253,
       key: 'bots',
     })[0];
-    this.physics.add.collider(this.player, fg);
+    this.physics.add.collider(this.player, this.fg);
     this.elevabots = map.createFromObjects('obj', {
       classType: Elevabot,
       frame: 192,
       gid: 265,
       key: 'bots',
     });
-    this.physics.add.collider(this.elevabots, fg);
+    this.physics.add.collider(this.elevabots, this.fg);
     this.keys =
       this.input.keyboard.addKeys('W,A,S,D,UP,LEFT,DOWN,RIGHT,SPACE,ENTER');
     this.input.keyboard.on('keydown', (event) => {
