@@ -1,5 +1,6 @@
 import Elevabot from './elevabot.js';
 import Felibot from './felibot.js';
+import Lasers from './lasers.js';
 import Phaser from './phaser.js';
 
 export default class LevelScene extends Phaser.Scene {
@@ -27,10 +28,11 @@ export default class LevelScene extends Phaser.Scene {
       key: 'bots',
     });
     this.physics.add.collider(this.elevabots, this.fg);
-    this.keys =
-      this.input.keyboard.addKeys('W,A,S,D,UP,LEFT,DOWN,RIGHT,SPACE,ENTER');
-    this.input.keyboard.on('keydown', (event) => {
-      //event.preventDefault();
+    this.keys = this.input.keyboard.addKeys('W,A,S,D,UP,LEFT,DOWN,RIGHT,SPACE,ENTER');
+    this.lasers = new Lasers(this);
+    this.physics.add.collider(this.lasers, this.fg, (laser) => {
+      laser.setActive(false);
+      laser.setVisible(false);
     });
     this.cameras.main.startFollow(this.player);
   }

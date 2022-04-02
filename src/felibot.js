@@ -124,11 +124,12 @@ export default class Felibot extends Phaser.Physics.Arcade.Sprite {
     this.cooldown += 1;
     if (this.scene.input.activePointer.leftButtonDown() && this.cooldown > 10) {
       this.cooldown = 0;
-      const x = this.scene.input.activePointer.x > 960 ? 8 : -8;
-      const projectile = this.scene.physics.add.sprite(this.x + x, this.y - 4, 'sprites', 'projectileGreen');
-      projectile.setGravityY(-2100);
-      this.scene.physics.moveTo(projectile, this.scene.input.activePointer.worldX, this.scene.input.activePointer.worldY, 500);
-      this.scene.physics.add.collider(projectile, this.scene.fg, (p) => p.disableBody(true, true));
+      this.scene.lasers.fire(
+        this.x + (this.scene.input.activePointer.x > 960 ? 8 : -8),
+        this.y - 4,
+        this.scene.input.activePointer.worldX,
+        this.scene.input.activePointer.worldY,
+      );
     }     
   }
 }
