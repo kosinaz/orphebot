@@ -34,6 +34,10 @@ export default class LevelScene extends Phaser.Scene {
       laser.setActive(false);
       laser.setVisible(false);
     });
+    this.physics.add.collider(this.lasers, this.elevabots, (elevabot, laser) => {
+      laser.setActive(false);
+      laser.setVisible(false);
+    });
     this.cameras.main.startFollow(this.player);
   }
   update() {
