@@ -42,6 +42,7 @@ export default class Elevabot extends Phaser.Physics.Arcade.Sprite {
     });
     this.anims.play('idle');
     this.speed = 160;
+    this.life = 100;
     this.setSize(64, 88);
     this.setOffset(0, 40);
   }

@@ -74,6 +74,7 @@ export default class Felibot extends Phaser.Physics.Arcade.Sprite {
     });
     this.anims.play('idle');
     this.speed = 320;
+    this.life = 100;
     this.cooldown = 0;
     this.setSize(64, 92);
     this.setOffset(0, 36);
