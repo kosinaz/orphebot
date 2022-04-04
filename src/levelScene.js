@@ -1,3 +1,4 @@
+import Bar from './bar.js';
 import Elevabot from './elevabot.js';
 import Felibot from './felibot.js';
 import Lasers from './lasers.js';
@@ -38,10 +39,7 @@ export default class LevelScene extends Phaser.Scene {
       laser.setActive(false);
       laser.setVisible(false);
       laser.body.reset(0, 0);
-      elevabot.life -= 10;
-      if (elevabot.life < 1) {
-        elevabot.disableBody(true, true);
-      }
+      elevabot.damage(10);
     });
     this.cameras.main.startFollow(this.player);
   }

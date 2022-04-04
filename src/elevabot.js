@@ -1,9 +1,13 @@
+import Bar from './bar.js';
 import Phaser from './phaser.js';
 
 export default class Elevabot extends Phaser.Physics.Arcade.Sprite {
   constructor(...args) {
     super(...args);
     this.scene.physics.world.enable(this);
+    this.bar = this.scene.add.existing(new Bar(this.scene, this, () => {
+      return this.life;
+    }));
     this.anims.create({
       key: 'walk',
       frames: this.anims.generateFrameNumbers('bots', {
@@ -47,6 +51,8 @@ export default class Elevabot extends Phaser.Physics.Arcade.Sprite {
     this.setOffset(0, 40);
   }
   update() {
+    this.bar.value = this.life;
+    this.bar.update();
     if (this.flipX) {
       this.setVelocityX(-this.speed);
       if (this.body.blocked.left) {
@@ -67,6 +73,13 @@ export default class Elevabot extends Phaser.Physics.Arcade.Sprite {
       } else {
         this.anims.play('walkBack', true);
       }
+    }
+  }
+  damage(amount) {
+    this.life -= amount;
+    if (this.life < 1) {
+      this.disableBody(true, true);
+      this.bar.destroy();
     }
   }
 }
