@@ -51,7 +51,6 @@ export default class Elevabot extends Phaser.Physics.Arcade.Sprite {
     this.setOffset(0, 40);
   }
   update() {
-    this.bar.value = this.life;
     this.bar.update();
     if (this.flipX) {
       this.setVelocityX(-this.speed);
