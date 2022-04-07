@@ -1,4 +1,3 @@
-import Bar from './bar.js';
 import Elevabot from './elevabot.js';
 import Felibot from './felibot.js';
 import Lasers from './lasers.js';
@@ -17,7 +16,7 @@ export default class LevelScene extends Phaser.Scene {
     this.fg.setCollisionBetween(0, 200);
     this.player = map.createFromObjects('obj', {
       classType: Felibot,
-      frame: 172,
+      frame: 168,
       gid: 253,
       key: 'bots',
     })[0];

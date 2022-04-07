@@ -1,26 +1,15 @@
-import Phaser from './phaser.js';
+import Bot from './bot.js';
 
-export default class Felibot extends Phaser.Physics.Arcade.Sprite {
-  constructor(...args) {
-    super(...args);
-    this.scene.physics.world.enable(this);
-    this.anims.create({
-      key: 'walk',
-      frames: this.anims.generateFrameNumbers('bots', {
-        start: 172,
-        end: 179,
-      }),
-      frameRate: 32,
-      repeat: -1
-    });
-    this.anims.create({
-      key: 'walkBack',
-      frames: this.anims.generateFrameNumbers('bots', {
-        start: 184,
-        end: 191,
-      }),
-      frameRate: 32,
-      repeat: -1
+export default class Felibot extends Bot {
+  constructor(scene) {
+    super({
+      frame: 168, 
+      life: 100,
+      offsetY: 36,
+      scene: scene,
+      sizeX: 64,
+      sizeY: 92,
+      speed: 320,
     });
     this.anims.create({
       key: 'jump',
@@ -34,24 +23,6 @@ export default class Felibot extends Phaser.Physics.Arcade.Sprite {
       key: 'jumpBack',
       frames: this.anims.generateFrameNumbers('bots', {
         frames: [187],
-      }),
-      frameRate: 8,
-      repeat: -1
-    });
-    this.anims.create({
-      key: 'idle',
-      frames: this.anims.generateFrameNumbers('bots', {
-        start: 168,
-        end: 171,
-      }),
-      frameRate: 8,
-      repeat: -1
-    });
-    this.anims.create({
-      key: 'idleBack',
-      frames: this.anims.generateFrameNumbers('bots', {
-        start: 180,
-        end: 183,
       }),
       frameRate: 8,
       repeat: -1
@@ -72,12 +43,7 @@ export default class Felibot extends Phaser.Physics.Arcade.Sprite {
       frameRate: 8,
       repeat: -1
     });
-    this.anims.play('idle');
-    this.speed = 320;
-    this.life = 100;
     this.cooldown = 0;
-    this.setSize(64, 92);
-    this.setOffset(0, 36);
   }
   update() {
     if (this.body.blocked.down) {
