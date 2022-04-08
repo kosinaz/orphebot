@@ -18,14 +18,14 @@ export default class LevelScene extends Phaser.Scene {
     this.player = map.createFromObjects('obj', {
       classType: Felibot,
       frame: 168,
-      gid: 253,
+      name: 'Felibot',
       key: 'bots',
     })[0];
     this.physics.add.collider(this.player, this.fg);
     this.elevabots = map.createFromObjects('obj', {
       classType: Elevabot,
       frame: 192,
-      gid: 265,
+      name: 'Elevabot',
       key: 'bots',
     });
     this.physics.add.collider(this.elevabots, this.fg);
@@ -46,7 +46,7 @@ export default class LevelScene extends Phaser.Scene {
     });
     this.physics.add.collider(this.lasers, this.player, (player, laser) => {
       if (!laser.friendly) {  
-        player.damage(10);
+        player.damage(1);
       }
       laser.setActive(false);
       laser.setVisible(false);

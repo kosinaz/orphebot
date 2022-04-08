@@ -5,11 +5,11 @@ export default class Felibot extends Bot {
     super({
       frame: 168, 
       life: 100,
-      offsetY: 40,
+      offsetY: 28,
       scene: scene,
       sizeX: 64,
-      sizeY: 92,
-      speed: 320,
+      sizeY: 100,
+      speed: 160,
     });
     this.maxCooldown = 10;
     this.currentCooldown = 10;
@@ -95,7 +95,7 @@ export default class Felibot extends Bot {
       this.currentCooldown = this.maxCooldown;
       this.scene.lasers.fire(
         this.x + (this.scene.input.activePointer.x > 960 ? 8 : -8),
-        this.y - 4,
+        this.y - 12,
         this.scene.input.activePointer.worldX,
         this.scene.input.activePointer.worldY,
         'greenLaser',

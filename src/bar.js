@@ -12,10 +12,10 @@ export default class Bar extends Phaser.GameObjects.Graphics {
     const value = this.valueCallback();
     this.clear();
     this.fillStyle(0x555555);
-    this.fillRect(-32, -60, 64, 16);
+    this.fillRect(-32, -64, 64, 12);
     this.fillStyle(0x777777);
-    this.fillRect(-30, -58, 60, 12);
+    this.fillRect(-30, -62, 60, 8);
     this.fillStyle(value < 30 ? 0xcc0000 : 0x00cc00);
-    this.fillRect(-30, -58, value * 60 / 100, 12);
+    this.fillRect(-30, -62, value * 60 / 100, 8);
   }
 }

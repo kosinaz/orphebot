@@ -5,11 +5,11 @@ export default class Elevabot extends Bot {
     super({
       frame: 192, 
       life: 100,
-      offsetY: 44,
+      offsetY: 28,
       scene: scene,
       sizeX: 64,
-      sizeY: 88,
-      speed: 160,
+      sizeY: 100,
+      speed: 80,
     });
     this.maxCooldown = 20;
     this.currentCooldown = 20;
@@ -41,8 +41,8 @@ export default class Elevabot extends Bot {
     if (this.currentCooldown < 0) {
       this.currentCooldown = this.maxCooldown;
       this.scene.lasers.fire(
-        this.x,
-        this.y - 4,
+        this.x + (this.scene.player.x > this.x ? 20 : -20),
+        this.y - 16,
         this.scene.player.x,
         this.scene.player.y - 16,
         'yellowLaser',
