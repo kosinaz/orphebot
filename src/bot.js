@@ -49,4 +49,11 @@ export default class Bot extends Phaser.Physics.Arcade.Sprite {
       repeat: -1
     });
   }
+  damage(amount) {
+    this.life -= amount;
+    if (this.life < 1) {
+      this.destroy();
+      this.bar.destroy();
+    }
+  }
 }

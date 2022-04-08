@@ -5,12 +5,14 @@ export default class Felibot extends Bot {
     super({
       frame: 168, 
       life: 100,
-      offsetY: 36,
+      offsetY: 40,
       scene: scene,
       sizeX: 64,
       sizeY: 92,
       speed: 320,
     });
+    this.maxCooldown = 10;
+    this.currentCooldown = 10;
     this.anims.create({
       key: 'jump',
       frames: this.anims.generateFrameNumbers('bots', {
@@ -43,9 +45,9 @@ export default class Felibot extends Bot {
       frameRate: 8,
       repeat: -1
     });
-    this.cooldown = 0;
   }
   update() {
+    this.bar.update();
     if (this.body.blocked.down) {
       this.setVelocityX(0);
       if (this.scene.keys.SPACE.isDown) {
@@ -88,14 +90,16 @@ export default class Felibot extends Bot {
         this.anims.play('jump', true);
       }
     }
-    this.cooldown += 1;
-    if (this.scene.input.activePointer.leftButtonDown() && this.cooldown > 10) {
-      this.cooldown = 0;
+    this.currentCooldown -= 1;
+    if (this.scene.input.activePointer.leftButtonDown() && this.currentCooldown < 0) {
+      this.currentCooldown = this.maxCooldown;
       this.scene.lasers.fire(
         this.x + (this.scene.input.activePointer.x > 960 ? 8 : -8),
         this.y - 4,
         this.scene.input.activePointer.worldX,
         this.scene.input.activePointer.worldY,
+        'greenLaser',
+        true,
       );
     }     
   }

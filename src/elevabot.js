@@ -5,12 +5,14 @@ export default class Elevabot extends Bot {
     super({
       frame: 192, 
       life: 100,
-      offsetY: 40,
+      offsetY: 44,
       scene: scene,
       sizeX: 64,
       sizeY: 88,
       speed: 160,
     });
+    this.maxCooldown = 20;
+    this.currentCooldown = 20;
   }
   update() {
     this.bar.update();
@@ -35,12 +37,16 @@ export default class Elevabot extends Bot {
         this.anims.play('walkBack', true);
       }
     }
-  }
-  damage(amount) {
-    this.life -= amount;
-    if (this.life < 1) {
-      this.disableBody(true, true);
-      this.bar.destroy();
-    }
+    this.currentCooldown -= 1;
+    if (this.currentCooldown < 0) {
+      this.currentCooldown = this.maxCooldown;
+      this.scene.lasers.fire(
+        this.x,
+        this.y - 4,
+        this.scene.player.x,
+        this.scene.player.y - 16,
+        'yellowLaser',
+      );
+    }     
   }
 }

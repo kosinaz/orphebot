@@ -15,8 +15,10 @@ export default class Lasers extends Phaser.Physics.Arcade.Group {
       classType: Laser,
     });
   }
-  fire(fromX, fromY, toX, toY) {
-    let laser = this.getFirstDead() || this.create(0, 0, 'sprites', 'greenLaser', false, false);
+  fire(fromX, fromY, toX, toY, frame, friendly) {
+    let laser = this.getFirstDead() || this.create(0, 0, 'sprites', frame, false, false);
+    laser.friendly = friendly;
+    laser.setFrame(frame);
     laser.fire(fromX, fromY, toX, toY);
   }
 }

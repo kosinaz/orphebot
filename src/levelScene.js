@@ -1,5 +1,6 @@
 import Elevabot from './elevabot.js';
 import Felibot from './felibot.js';
+import Bot from './bot.js';
 import Lasers from './lasers.js';
 import Phaser from './phaser.js';
 
@@ -33,17 +34,29 @@ export default class LevelScene extends Phaser.Scene {
     this.physics.add.collider(this.lasers, this.fg, (laser) => {
       laser.setActive(false);
       laser.setVisible(false);
+      laser.body.reset(0, 0);
     });
     this.physics.add.collider(this.lasers, this.elevabots, (elevabot, laser) => {
+      if (laser.friendly) {  
+        elevabot.damage(10);
+      }
       laser.setActive(false);
       laser.setVisible(false);
       laser.body.reset(0, 0);
-      elevabot.damage(10);
+    });
+    this.physics.add.collider(this.lasers, this.player, (player, laser) => {
+      if (!laser.friendly) {  
+        player.damage(10);
+      }
+      laser.setActive(false);
+      laser.setVisible(false);
+      laser.body.reset(0, 0);
     });
     this.cameras.main.startFollow(this.player);
   }
   update() {
-    this.player.update();
-    this.elevabots.forEach(bot => bot.update());
+    this.children.list.forEach(gameObject => {
+      gameObject.update();
+    });
   }
 }
