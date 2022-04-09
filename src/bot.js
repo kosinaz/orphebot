@@ -6,7 +6,7 @@ export default class Bot extends Phaser.Physics.Arcade.Sprite {
     super(config.scene, 0, 0, 'bots', 0);
     this.scene.physics.world.enable(this);
     this.setSize(config.sizeX, config.sizeY);
-    this.setOffset(0, config.offsetY);
+    this.setOffset(config.offsetX, config.offsetY);
     this.speed = config.speed;
     this.life = config.life;
     this.bar = this.scene.add.existing(new Bar(this.scene, this, () => {
@@ -44,6 +44,22 @@ export default class Bot extends Phaser.Physics.Arcade.Sprite {
       frames: this.anims.generateFrameNumbers('bots', {
         start: config.frame + 12,
         end: config.frame + 15,
+      }),
+      frameRate: 8,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'crouch',
+      frames: this.anims.generateFrameNumbers('bots', {
+        frames: [config.frame + 24],
+      }),
+      frameRate: 8,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'crouchBack',
+      frames: this.anims.generateFrameNumbers('bots', {
+        frames: [config.frame + 25],
       }),
       frameRate: 8,
       repeat: -1

@@ -3,16 +3,17 @@ import Bot from './bot.js';
 export default class Elevabot extends Bot {
   constructor(scene) {
     super({
-      frame: 192, 
+      frame: 208, 
       life: 100,
+      offsetX: 8,
       offsetY: 28,
       scene: scene,
-      sizeX: 64,
+      sizeX: 48,
       sizeY: 100,
       speed: 80,
     });
-    this.maxCooldown = 20;
-    this.currentCooldown = 20;
+    this.maxCooldown = 60;
+    this.currentCooldown = 60;
   }
   update() {
     this.bar.update();
@@ -44,7 +45,7 @@ export default class Elevabot extends Bot {
         this.x + (this.scene.player.x > this.x ? 20 : -20),
         this.y - 16,
         this.scene.player.x,
-        this.scene.player.y - 16,
+        this.scene.keys.S.isDown ? this.scene.player.y + 16 : this.scene.player.y - 16,
         'yellowLaser',
       );
     }     

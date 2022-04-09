@@ -3,20 +3,22 @@ import Bot from './bot.js';
 export default class Felibot extends Bot {
   constructor(scene) {
     super({
-      frame: 168, 
+      frame: 182, 
       life: 100,
+      offsetX: 16,
       offsetY: 28,
       scene: scene,
-      sizeX: 64,
+      sizeX: 32,
       sizeY: 100,
       speed: 160,
     });
-    this.maxCooldown = 10;
-    this.currentCooldown = 10;
+    const frame = 182;
+    this.maxCooldown = 30;
+    this.currentCooldown = 30;
     this.anims.create({
       key: 'jump',
       frames: this.anims.generateFrameNumbers('bots', {
-        frames: [175],
+        frames: [frame + 7],
       }),
       frameRate: 8,
       repeat: -1
@@ -24,7 +26,7 @@ export default class Felibot extends Bot {
     this.anims.create({
       key: 'jumpBack',
       frames: this.anims.generateFrameNumbers('bots', {
-        frames: [187],
+        frames: [frame + 19],
       }),
       frameRate: 8,
       repeat: -1
@@ -32,7 +34,7 @@ export default class Felibot extends Bot {
     this.anims.create({
       key: 'shoot',
       frames: this.anims.generateFrameNumbers('bots', {
-        frames: [168],
+        frames: [frame],
       }),
       frameRate: 8,
       repeat: -1
@@ -40,7 +42,7 @@ export default class Felibot extends Bot {
     this.anims.create({
       key: 'shootBack',
       frames: this.anims.generateFrameNumbers('bots', {
-        frames: [180],
+        frames: [frame + 12],
       }),
       frameRate: 8,
       repeat: -1
@@ -48,13 +50,21 @@ export default class Felibot extends Bot {
   }
   update() {
     this.bar.update();
+    this.setSize(32, 100);
+    this.setOffset(16, 28);
     if (this.body.blocked.down) {
       this.setVelocityX(0);
       if (this.scene.keys.SPACE.isDown) {
         this.setVelocityY(-600);
       }
     }
-    if (this.scene.keys.A.isDown) {
+    if (this.scene.keys.S.isDown) {
+      if (this.body.blocked.down) {
+        this.setVelocityX(0);
+        this.setSize(32, 64);
+        this.setOffset(16, 64);
+      }
+    } else if (this.scene.keys.A.isDown) {
       this.setVelocityX(-this.speed);
       this.setFlipX(true);
     } else if (this.scene.keys.D.isDown) {
@@ -68,8 +78,14 @@ export default class Felibot extends Bot {
         } else {
           this.anims.play('walk', true);
         }
+      } else if (this.scene.keys.S.isDown) {
+        if (this.scene.input.activePointer.x > 960 == this.flipX) {
+          this.anims.play('crouchBack', true);
+        } else {
+          this.anims.play('crouch', true);
+        }
       } else {
-        if (this.scene.input.activePointer.leftButtonDown()) {
+        if (this.scene.input.activePointer.leftButtonDown()) {         
           if (this.scene.input.activePointer.x > 960 == this.flipX) {
             this.anims.play('shootBack', true);
           } else {
@@ -95,7 +111,7 @@ export default class Felibot extends Bot {
       this.currentCooldown = this.maxCooldown;
       this.scene.lasers.fire(
         this.x + (this.scene.input.activePointer.x > 960 ? 8 : -8),
-        this.y - 12,
+        this.scene.keys.S.isDown ? this.y + 20 : this.y - 12,
         this.scene.input.activePointer.worldX,
         this.scene.input.activePointer.worldY,
         'greenLaser',
