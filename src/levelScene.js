@@ -1,6 +1,5 @@
 import Elevabot from './elevabot.js';
 import Felibot from './felibot.js';
-import Bot from './bot.js';
 import Lasers from './lasers.js';
 import Phaser from './phaser.js';
 
@@ -13,6 +12,7 @@ export default class LevelScene extends Phaser.Scene {
       key: 'level1',
     });
     const tileset = map.addTilesetImage('tileset', 'tileset');
+    this.bg = map.createLayer('bg', tileset);
     this.fg = map.createLayer('fg', tileset);
     this.fg.setCollisionBetween(0, 200);
     this.player = map.createFromObjects('obj', {

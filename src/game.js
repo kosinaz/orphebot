@@ -3,7 +3,7 @@ import LoadScene from './loadScene.js';
 
 new Phaser.Game({
   type: Phaser.AUTO,
-  backgroundColor: '#777',
+  backgroundColor: '#262626',
   physics: {
     default: 'arcade',
     arcade: {
