@@ -24,8 +24,8 @@ export default class Bot extends Phaser.Physics.Arcade.Sprite {
     this.anims.create({
       key: 'walkBack',
       frames: this.anims.generateFrameNumbers('bots', {
-        start: config.frame + 16,
-        end: config.frame + 23,
+        start: config.frame + 11,
+        end: config.frame + 4,
       }),
       frameRate: this.speed / 10,
       repeat: -1

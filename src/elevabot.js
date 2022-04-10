@@ -14,28 +14,33 @@ export default class Elevabot extends Bot {
     });
     this.maxCooldown = 60;
     this.currentCooldown = 60;
+    this.forward = true;
   }
   update() {
     this.bar.update();
-    if (this.flipX) {
+    if (!this.forward) {
       this.setVelocityX(-this.speed);
       if (this.body.blocked.left) {
-        this.setFlipX(false);
+        this.forward = true;
       }
       if (this.scene.player.x > this.x) {
+        this.setFlipX(false);
         this.anims.play('walkBack', true);
       } else {
+        this.setFlipX(true);
         this.anims.play('walk', true);
       }
     } else {
       this.setVelocityX(this.speed);
       if (this.body.blocked.right) {
-        this.setFlipX(true);
+        this.forward = false;
       }
       if (this.scene.player.x > this.x) {
         this.anims.play('walk', true);
+        this.setFlipX(false);
       } else {
         this.anims.play('walkBack', true);
+        this.setFlipX(true);
       }
     }
     this.currentCooldown -= 1;

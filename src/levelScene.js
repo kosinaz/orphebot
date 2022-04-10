@@ -46,7 +46,7 @@ export default class LevelScene extends Phaser.Scene {
     });
     this.physics.add.collider(this.lasers, this.player, (player, laser) => {
       if (!laser.friendly) {  
-        player.damage(1);
+        player.damage(10);
       }
       laser.setActive(false);
       laser.setVisible(false);

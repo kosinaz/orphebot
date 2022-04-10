@@ -52,6 +52,11 @@ export default class Felibot extends Bot {
     this.bar.update();
     this.setSize(32, 100);
     this.setOffset(16, 28);
+    if (this.scene.input.activePointer.x > 960) {
+      this.setFlipX(false);
+    } else {
+      this.setFlipX(true);
+    }
     if (this.body.blocked.down) {
       this.setVelocityX(0);
       if (this.scene.keys.SPACE.isDown) {
@@ -66,45 +71,28 @@ export default class Felibot extends Bot {
       }
     } else if (this.scene.keys.A.isDown) {
       this.setVelocityX(-this.speed);
-      this.setFlipX(true);
     } else if (this.scene.keys.D.isDown) {
       this.setVelocityX(this.speed);
-      this.setFlipX(false);
     } 
     if (this.body.blocked.down) {
       if (this.body.velocity.x) {
-        if (this.scene.input.activePointer.x > 960 == this.flipX) {
-          this.anims.play('walkBack', true);
-        } else {
+        if (this.scene.keys.A.isDown && this.scene.input.activePointer.x < 960
+          || this.scene.keys.D.isDown && this.scene.input.activePointer.x > 960) {
           this.anims.play('walk', true);
+        } else {
+          this.anims.play('walkBack', true);          
         }
       } else if (this.scene.keys.S.isDown) {
-        if (this.scene.input.activePointer.x > 960 == this.flipX) {
-          this.anims.play('crouchBack', true);
-        } else {
-          this.anims.play('crouch', true);
-        }
+        this.anims.play('crouch', true);
       } else {
-        if (this.scene.input.activePointer.leftButtonDown()) {         
-          if (this.scene.input.activePointer.x > 960 == this.flipX) {
-            this.anims.play('shootBack', true);
-          } else {
-            this.anims.play('shoot', true);
-          }
+        if (this.scene.input.activePointer.leftButtonDown()) {       
+          this.anims.play('shoot', true);
         } else {
-          if (this.scene.input.activePointer.x > 960 == this.flipX) {
-            this.anims.play('idleBack', true);
-          } else {
-            this.anims.play('idle', true);
-          }
+          this.anims.play('idle', true);
         }
       }
     } else {
-      if (this.scene.input.activePointer.x > 960 == this.flipX) {
-        this.anims.play('jumpBack', true);
-      } else {
-        this.anims.play('jump', true);
-      }
+      this.anims.play('jump', true);
     }
     this.currentCooldown -= 1;
     if (this.scene.input.activePointer.leftButtonDown() && this.currentCooldown < 0) {
