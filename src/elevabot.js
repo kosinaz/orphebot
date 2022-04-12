@@ -14,14 +14,15 @@ export default class Elevabot extends Bot {
     });
     this.maxCooldown = 60;
     this.currentCooldown = 60;
-    this.forward = true;
+    this.direction = 1;
   }
   update() {
     this.bar.update();
-    if (!this.forward) {
+    if (this.direction === -1) {
       this.setVelocityX(-this.speed);
-      if (this.body.blocked.left) {
-        this.forward = true;
+      if (this.body.blocked.left || !this.scene.fg.getTileAtWorldXY(this.x - 16, this.y + 64)) {
+        this.direction = 0;
+        this.setVelocityX(0);
       }
       if (this.scene.player.x > this.x) {
         this.setFlipX(false);
@@ -30,29 +31,41 @@ export default class Elevabot extends Bot {
         this.setFlipX(true);
         this.anims.play('walk', true);
       }
-    } else {
+    } else if (this.direction === 1) {
       this.setVelocityX(this.speed);
-      if (this.body.blocked.right) {
-        this.forward = false;
+      if (this.body.blocked.right || !this.scene.fg.getTileAtWorldXY(this.x + 16, this.y + 64)) {
+        this.direction = 0;
+        this.setVelocityX(0);
       }
       if (this.scene.player.x > this.x) {
         this.anims.play('walk', true);
         this.setFlipX(false);
       } else {
         this.anims.play('walkBack', true);
+        this.setFlipX(true);
+      }
+    } else {
+      this.setVelocityX(0);
+      this.anims.play('idle', true);
+      if (this.scene.player.x > this.x) {
+        this.setFlipX(false);
+      } else {
         this.setFlipX(true);
       }
     }
     this.currentCooldown -= 1;
     if (this.currentCooldown < 0) {
+      this.direction = ~~(Math.random() * 3) - 1;
       this.currentCooldown = this.maxCooldown;
-      this.scene.lasers.fire(
-        this.x + (this.scene.player.x > this.x ? 20 : -20),
-        this.y - 16,
-        this.scene.player.x,
-        this.scene.keys.S.isDown ? this.scene.player.y + 16 : this.scene.player.y - 16,
-        'yellowLaser',
-      );
+      if (Phaser.Math.Distance.BetweenPoints(this, this.scene.player) < 1000) {
+        this.scene.lasers.fire(
+          this.x + (this.scene.player.x > this.x ? 20 : -20),
+          this.y - 16,
+          this.scene.player.x,
+          this.scene.keys.S.isDown ? this.scene.player.y + 16 : this.scene.player.y - 16,
+          'yellowLaser',
+        );
+      }
     }     
   }
 }
