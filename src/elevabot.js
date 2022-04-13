@@ -58,13 +58,19 @@ export default class Elevabot extends Bot {
       this.direction = ~~(Math.random() * 3) - 1;
       this.currentCooldown = this.maxCooldown;
       if (Phaser.Math.Distance.BetweenPoints(this, this.scene.player) < 1000) {
-        this.scene.lasers.fire(
-          this.x + (this.scene.player.x > this.x ? 20 : -20),
-          this.y - 16,
-          this.scene.player.x,
-          this.scene.keys.S.isDown ? this.scene.player.y + 16 : this.scene.player.y - 16,
-          'yellowLaser',
-        );
+        if (this.scene.player.life > 0) {
+          const x1 = this.x + (this.scene.player.x > this.x ? 20 : -20);
+          const y1 = this.y - 16;
+          const x2 = this.scene.player.x;
+          const y2 = this.scene.keys.S.isDown ? this.scene.player.y + 16 : this.scene.player.y - 16;
+          const line = new Phaser.Geom.Line(x1, y1 + 16, x2, y2 + 16);
+          const overlappingTiles = this.scene.fg.getTilesWithinShape(line, {
+            isColliding: true,
+          });
+          if (!overlappingTiles.length) {
+            this.scene.lasers.fire(x1, y1, x2, y2, 'yellowLaser');
+          }
+        }
       }
     }     
   }
