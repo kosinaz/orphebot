@@ -69,6 +69,8 @@ export default class Elevabot extends Bot {
           });
           if (!overlappingTiles.length) {
             this.scene.lasers.fire(x1, y1, x2, y2, 'yellowLaser');
+          } else if (~~(Math.random() * 2) > 0) {
+            this.scene.lasers.fire(x1, y1, x2, y2 - 48, 'yellowLaser');
           }
         }
       }
