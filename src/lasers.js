@@ -3,9 +3,7 @@ import Phaser from './phaser.js';
 
 export default class Lasers extends Phaser.Physics.Arcade.Group {
   constructor(scene) {
-    super(scene.physics.world, scene, {
-      gravityY: -2100,
-    });
+    super(scene.physics.world, scene);
     this.createMultiple({
       frameQuantity: 1,
       key: 'sprites',

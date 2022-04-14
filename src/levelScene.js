@@ -1,4 +1,5 @@
 import Elevabot from './elevabot.js';
+import Elevator from './elevator.js';
 import Felibot from './felibot.js';
 import Lasers from './lasers.js';
 import Phaser from './phaser.js';
@@ -13,6 +14,7 @@ export default class LevelScene extends Phaser.Scene {
     });
     const tileset = map.addTilesetImage('tileset', 'tileset');
     this.bg = map.createLayer('bg', tileset);
+    this.bg.setCollisionByExclusion([115, 116, 126]);
     this.fg = map.createLayer('fg', tileset);
     this.fg.setCollisionBetween(0, 200);
     this.player = map.createFromObjects('obj', {
@@ -29,6 +31,16 @@ export default class LevelScene extends Phaser.Scene {
       key: 'bots',
     });
     this.physics.add.collider(this.elevabots, this.fg);
+    this.elevators = map.createFromObjects('obj', {
+      classType: Elevator,
+      frame: 'elevator',
+      name: 'Elevator',
+      key: 'sprites',
+    });
+    this.physics.add.collider(this.player, this.elevators);
+    this.physics.add.collider(this.elevabots, this.elevators);
+    this.physics.add.collider(this.fg, this.elevators);
+    this.physics.add.collider(this.elevators, this.bg);
     this.keys = this.input.keyboard.addKeys('W,A,S,D,UP,LEFT,DOWN,RIGHT,SPACE,ENTER');
     this.lasers = new Lasers(this);
     this.physics.add.collider(this.lasers, this.fg, (laser) => {

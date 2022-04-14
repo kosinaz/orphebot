@@ -1,8 +1,16 @@
 {"frames": [
 
 {
+	"filename": "elevator",
+	"frame": {"x":0,"y":0,"w":192,"h":128},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":192,"h":128},
+	"sourceSize": {"w":192,"h":128}
+},
+{
 	"filename": "greenLaser",
-	"frame": {"x":0,"y":0,"w":12,"h":16},
+	"frame": {"x":192,"y":0,"w":12,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":16},
@@ -10,7 +18,7 @@
 },
 {
 	"filename": "yellowLaser",
-	"frame": {"x":12,"y":0,"w":12,"h":16},
+	"frame": {"x":204,"y":0,"w":12,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":16},
@@ -21,8 +29,8 @@
 	"version": "1.0",
 	"image": "sprites.png",
 	"format": "RGBA8888",
-	"size": {"w":24,"h":16},
+	"size": {"w":216,"h":128},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:1a868e1cc22a9c17376f389902855e25:8b0fa2626676b79fe5edadec57677223:1eabdf11f75e3a4fe3147baf7b5be24b$"
+	"smartupdate": "$TexturePacker:SmartUpdate:9d6de77b3607d4a53270cb1081825fa6:8ea64482c394f92d67149fec15db7d24:1eabdf11f75e3a4fe3147baf7b5be24b$"
 }
 }

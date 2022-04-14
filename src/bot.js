@@ -8,6 +8,7 @@ export default class Bot extends Phaser.Physics.Arcade.Sprite {
     this.setSize(config.sizeX, config.sizeY);
     this.setOffset(config.offsetX, config.offsetY);
     this.setPushable(false);
+    this.setGravity(0, 2100);
     this.speed = config.speed;
     this.life = config.life;
     this.bar = this.scene.add.existing(new Bar(this.scene, this, () => {
