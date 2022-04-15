@@ -53,7 +53,7 @@
                  "type":"",
                  "visible":true,
                  "width":64,
-                 "x":768,
+                 "x":640,
                  "y":3904
                 }, 
                 {
@@ -103,6 +103,42 @@
                  "width":64,
                  "x":2560,
                  "y":3904
+                }, 
+                {
+                 "gid":377,
+                 "height":128,
+                 "id":59,
+                 "name":"Elevabot",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":1280,
+                 "y":3456
+                }, 
+                {
+                 "gid":377,
+                 "height":128,
+                 "id":60,
+                 "name":"Elevabot",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":576,
+                 "y":3456
+                }, 
+                {
+                 "gid":377,
+                 "height":128,
+                 "id":61,
+                 "name":"Elevabot",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":1024,
+                 "y":3904
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -111,7 +147,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":59,
+ "nextobjectid":63,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",

@@ -2,23 +2,39 @@
 
 {
 	"filename": "elevator",
-	"frame": {"x":0,"y":0,"w":192,"h":128},
+	"frame": {"x":0,"y":24,"w":192,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":192,"h":128},
 	"sourceSize": {"w":192,"h":128}
 },
 {
+	"filename": "greenCore",
+	"frame": {"x":24,"y":0,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+},
+{
 	"filename": "greenLaser",
-	"frame": {"x":192,"y":0,"w":12,"h":16},
+	"frame": {"x":0,"y":0,"w":12,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":16},
 	"sourceSize": {"w":12,"h":16}
 },
 {
+	"filename": "yellowCore",
+	"frame": {"x":48,"y":0,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+},
+{
 	"filename": "yellowLaser",
-	"frame": {"x":204,"y":0,"w":12,"h":16},
+	"frame": {"x":12,"y":0,"w":12,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":16},
@@ -29,8 +45,8 @@
 	"version": "1.0",
 	"image": "sprites.png",
 	"format": "RGBA8888",
-	"size": {"w":216,"h":128},
+	"size": {"w":192,"h":152},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:9d6de77b3607d4a53270cb1081825fa6:8ea64482c394f92d67149fec15db7d24:1eabdf11f75e3a4fe3147baf7b5be24b$"
+	"smartupdate": "$TexturePacker:SmartUpdate:86bf559de4982a80bf94e1e6fd30de03:13ecf03bfb97cab1060a890bd54fabbc:1eabdf11f75e3a4fe3147baf7b5be24b$"
 }
 }

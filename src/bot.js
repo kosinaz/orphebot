@@ -53,6 +53,13 @@ export default class Bot extends Phaser.Physics.Arcade.Sprite {
   damage(amount) {
     this.life -= amount;
     if (this.life < 1) {
+      this.core = this.scene.physics.add.image(this.x, this.y, 'sprites', 'yellowCore');
+      this.core.setVelocityY(-500);
+      this.core.setGravityY(2100);
+      this.scene.physics.add.collider(this.core, this.scene.fg);
+      this.scene.physics.add.overlap(this.core, this.scene.player, (core, player) => {
+        core.destroy();
+      });
       this.destroy();
       this.bar.destroy();
     }

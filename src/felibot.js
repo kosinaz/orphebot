@@ -107,4 +107,10 @@ export default class Felibot extends Bot {
       );
     }     
   }
+  damage(amount) {
+    super.damage(amount);
+    if (this.life < 1) {
+      this.core.setFrame('greenCore');
+    }
+  }   
 }

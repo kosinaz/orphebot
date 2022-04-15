@@ -97,6 +97,6 @@ export default class Elevabot extends Bot {
           }
         }
       }
-    }     
+    }
   }
 }
