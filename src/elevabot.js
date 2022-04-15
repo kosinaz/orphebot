@@ -1,4 +1,5 @@
 import Bot from './bot.js';
+import Phaser from './phaser.js';
 
 export default class Elevabot extends Bot {
   constructor(scene) {
@@ -18,6 +19,11 @@ export default class Elevabot extends Bot {
   }
   update() {
     this.bar.update();
+    const riding = this.scene.physics.collide(this, this.scene.elevators);
+    if (riding) {
+      this.direction = 0;
+      this.setVelocityX(0);
+    }
     if (this.direction === -1) {
       this.setVelocityX(-this.speed);
       if (this.body.blocked.left || !this.scene.fg.getTileAtWorldXY(this.x - 16, this.y + 64)) {
@@ -57,8 +63,25 @@ export default class Elevabot extends Bot {
     if (this.currentCooldown < 0) {
       this.direction = ~~(Math.random() * 3) - 1;
       this.currentCooldown = this.maxCooldown;
+      const closestElevator = this.scene.physics.closest(this, this.scene.elevators);
       if (Phaser.Math.Distance.BetweenPoints(this, this.scene.player) < 1000) {
         if (this.scene.player.life > 0) {
+          if (this.scene.player.y < this.y) {
+            if (riding) {
+              closestElevator.setVelocityY(-350);
+            } else if (closestElevator.y < this.y) {
+              closestElevator.setVelocityY(350);
+            } else if (Phaser.Math.Distance.BetweenPoints(this, closestElevator) < 96) {
+              closestElevator.setVelocityY(-350);
+              this.direction = 0;
+            } else if (closestElevator.x > this.x) {
+              this.direction = 1;
+            } else {
+              this.direction = -1;
+            }
+          } else if (riding) {
+            closestElevator.setVelocityY(350);
+          }
           const x1 = this.x + (this.scene.player.x > this.x ? 20 : -20);
           const y1 = this.y - 16;
           const x2 = this.scene.player.x;

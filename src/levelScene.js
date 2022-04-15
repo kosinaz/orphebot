@@ -38,12 +38,15 @@ export default class LevelScene extends Phaser.Scene {
       key: 'sprites',
     });
     this.physics.add.collider(this.player, this.elevators);
-    this.physics.add.collider(this.elevabots, this.elevators);
-    this.physics.add.collider(this.fg, this.elevators);
     this.physics.add.collider(this.elevators, this.bg);
     this.keys = this.input.keyboard.addKeys('W,A,S,D,UP,LEFT,DOWN,RIGHT,SPACE,ENTER');
     this.lasers = new Lasers(this);
     this.physics.add.collider(this.lasers, this.fg, (laser) => {
+      laser.setActive(false);
+      laser.setVisible(false);
+      laser.body.reset(0, 0);
+    });
+    this.physics.add.collider(this.lasers, this.elevators, (elevator, laser) => {
       laser.setActive(false);
       laser.setVisible(false);
       laser.body.reset(0, 0);
