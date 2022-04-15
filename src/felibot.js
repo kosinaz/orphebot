@@ -111,6 +111,16 @@ export default class Felibot extends Bot {
     super.damage(amount);
     if (this.life < 1) {
       this.core.setFrame('greenCore');
+      this.core.scene.time.addEvent({
+        delay: 5000,
+        callback: () => {
+          this.core.scene.player = this.core.scene.add.existing(new Felibot(this.core.scene));
+          this.core.scene.player.setTexture('bots', 182);
+          this.core.scene.player.setPosition(this.x, this.y);
+          this.core.scene.player.setVelocityY(-600);
+          this.core.destroy();
+        }
+      })
     }
-  }   
+  }  
 }
