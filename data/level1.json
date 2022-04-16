@@ -78,7 +78,7 @@
                  "visible":true,
                  "width":192,
                  "x":64,
-                 "y":3968
+                 "y":3520
                 }, 
                 {
                  "gid":403,
@@ -90,7 +90,7 @@
                  "visible":true,
                  "width":192,
                  "x":1600,
-                 "y":3712
+                 "y":3520
                 }, 
                 {
                  "gid":377,
@@ -101,20 +101,8 @@
                  "type":"",
                  "visible":true,
                  "width":64,
-                 "x":2560,
+                 "x":2368,
                  "y":3904
-                }, 
-                {
-                 "gid":377,
-                 "height":128,
-                 "id":59,
-                 "name":"Elevabot",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":64,
-                 "x":1280,
-                 "y":3456
                 }, 
                 {
                  "gid":377,
@@ -127,18 +115,6 @@
                  "width":64,
                  "x":576,
                  "y":3456
-                }, 
-                {
-                 "gid":377,
-                 "height":128,
-                 "id":61,
-                 "name":"Elevabot",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":64,
-                 "x":1024,
-                 "y":3904
                 }],
          "opacity":1,
          "type":"objectgroup",

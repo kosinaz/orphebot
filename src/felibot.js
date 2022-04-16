@@ -115,9 +115,11 @@ export default class Felibot extends Bot {
         delay: 5000,
         callback: () => {
           this.core.scene.player = this.core.scene.add.existing(new Felibot(this.core.scene));
+          this.core.scene.players.add(this.core.scene.player);
           this.core.scene.player.setTexture('bots', 182);
           this.core.scene.player.setPosition(this.x, this.y);
           this.core.scene.player.setVelocityY(-600);
+          this.core.scene.cameras.main.startFollow(this.core.scene.player);
           this.core.destroy();
         }
       })
