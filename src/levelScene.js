@@ -3,6 +3,7 @@ import Elevator from './elevator.js';
 import Felibot from './felibot.js';
 import Lasers from './lasers.js';
 import Phaser from './phaser.js';
+import PlayerController from './playerController.js';
 
 export default class LevelScene extends Phaser.Scene {
   preload() {
@@ -23,6 +24,7 @@ export default class LevelScene extends Phaser.Scene {
       name: 'Felibot',
       key: 'bots',
     })[0];
+    this.playerController = new PlayerController(this.player);
     this.players = this.physics.add.group({
       gravityY: 2100,
     });
@@ -73,9 +75,10 @@ export default class LevelScene extends Phaser.Scene {
     });
     this.cameras.main.startFollow(this.player);
   }
-  update() {
+  update(t, dt) {
     this.children.list.forEach(gameObject => {
       gameObject.update();
     });
+    this.playerController.update(dt);
   }
 }
