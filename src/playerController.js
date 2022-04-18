@@ -11,7 +11,7 @@ export default class PlayerController extends BotController {
       onEnter: this.jumpOnEnter,
       onUpdate: this.jumpOnUpdate,
     });
-    this.keys = this.bot.scene.input.keyboard.addKeys('W,A,S,D,UP,LEFT,DOWN,RIGHT,SPACE,ENTER');
+    this.keys = this.bot.scene.input.keyboard.addKeys('W,A,S,D,SPACE');
     this.pointer = this.bot.scene.input.activePointer;
   }
   update(dt) {
@@ -46,7 +46,11 @@ export default class PlayerController extends BotController {
       this.stateMachine.setState('crouch');
     }
     if (this.keys.SPACE.isDown) {
-      this.stateMachine.setState('jump');      
+      this.bot.setVelocityY(-600);  
+      this.stateMachine.setState('jump');   
+    }
+    if (!this.bot.body.blocked.down) {
+      this.stateMachine.setState('jump'); 
     }
   }
 	walkOnUpdate() {
@@ -72,7 +76,11 @@ export default class PlayerController extends BotController {
       this.stateMachine.setState('crouch');
     }
     if (this.keys.SPACE.isDown) {
+      this.bot.setVelocityY(-600);
       this.stateMachine.setState('jump');      
+    }
+    if (!this.bot.body.blocked.down) {
+      this.stateMachine.setState('jump'); 
     }
     if (this.noneIsDown()) {
       this.bot.setVelocityX(0);
@@ -102,7 +110,11 @@ export default class PlayerController extends BotController {
       this.stateMachine.setState('crouch');
     }
     if (this.keys.SPACE.isDown) {
+      this.bot.setVelocityY(-600);
       this.stateMachine.setState('jump');      
+    }
+    if (!this.bot.body.blocked.down) {
+      this.stateMachine.setState('jump'); 
     }
     if (this.noneIsDown()) {
       this.stateMachine.setState('idle');
@@ -121,9 +133,16 @@ export default class PlayerController extends BotController {
     if (this.pointer.x > 960) {
       this.bot.flipX = false;
     }
+    if (this.keys.SPACE.isDown) {
+      this.bot.setVelocityY(-600);
+      this.stateMachine.setState('jump');      
+    }
     if (!this.keys.S.isDown) {
       this.stateMachine.setState('idle');
     }
+    if (!this.bot.body.blocked.down) {
+      this.stateMachine.setState('jump'); 
+    } 
   }
   crouchOnExit() {    
     this.bot.setSize(32, 100);
@@ -131,7 +150,6 @@ export default class PlayerController extends BotController {
   }
   jumpOnEnter() {
     this.bot.play('jump');
-    this.bot.setVelocityY(-600);
   }
   jumpOnUpdate() {
     if (this.pointer.x <= 960) {
