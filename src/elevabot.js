@@ -1,102 +1,208 @@
 import Bot from './bot.js';
-import Phaser from './phaser.js';
 
 export default class Elevabot extends Bot {
-  constructor(scene) {
-    super({
-      frame: 208, 
-      life: 100,
-      offsetX: 8,
-      offsetY: 28,
-      scene: scene,
-      sizeX: 48,
-      sizeY: 100,
-      speed: 80,
+  constructor(sprite) {
+    super(sprite);
+    this.stateMachine.addState('approachForward', {
+      onEnter: this.approachForwardOnEnter,
+      onUpdate: this.approachForwardOnUpdate,
+      onExit: this.approachForwardOnExit,
+    }).addState('approachBackward', {
+      onEnter: this.approachBackwardOnEnter,
+      onUpdate: this.approachBackwardOnUpdate,
+      onExit: this.approachBackwardOnExit,
+    }).addState('call', {
+      onEnter: this.callOnEnter,
+      onUpdate: this.callOnUpdate,
+    }).addState('ride', {
+      onEnter: this.rideOnEnter,
+      onUpdate: this.rideOnUpdate,
     });
+    this.health = 100;
+    this.speed = 80;
     this.maxCooldown = 60;
     this.currentCooldown = 60;
-    this.direction = 1;
   }
-  update() {
-    // this.bar.update();
-    // const riding = this.scene.physics.collide(this, this.scene.elevators);
-    // if (riding) {
-    //   this.direction = 0;
-    //   this.setVelocityX(0);
-    // }
-    // if (this.direction === -1) {
-    //   this.setVelocityX(-this.speed);
-    //   if (this.body.blocked.left || !this.scene.fg.getTileAtWorldXY(this.x - 16, this.y + 64)) {
-    //     this.direction = 0;
-    //     this.setVelocityX(0);
-    //   }
-    //   if (this.scene.player.x > this.x) {
-    //     this.setFlipX(false);
-    //     this.anims.play('walkBack', true);
-    //   } else {
-    //     this.setFlipX(true);
-    //     this.anims.play('walk', true);
-    //   }
-    // } else if (this.direction === 1) {
-    //   this.setVelocityX(this.speed);
-    //   if (this.body.blocked.right || !this.scene.fg.getTileAtWorldXY(this.x + 16, this.y + 64)) {
-    //     this.direction = 0;
-    //     this.setVelocityX(0);
-    //   }
-    //   if (this.scene.player.x > this.x) {
-    //     this.anims.play('walk', true);
-    //     this.setFlipX(false);
-    //   } else {
-    //     this.anims.play('walkBack', true);
-    //     this.setFlipX(true);
-    //   }
-    // } else {
-    //   this.setVelocityX(0);
-    //   this.anims.play('idle', true);
-    //   if (this.scene.player.x > this.x) {
-    //     this.setFlipX(false);
-    //   } else {
-    //     this.setFlipX(true);
-    //   }
-    // }
-    // this.currentCooldown -= 1;
-    // if (this.currentCooldown < 0) {
-    //   this.direction = ~~(Math.random() * 3) - 1;
-    //   this.currentCooldown = this.maxCooldown;
-    //   const closestElevator = this.scene.physics.closest(this, this.scene.elevators);
-    //   if (Phaser.Math.Distance.BetweenPoints(this, this.scene.player) < 1000) {
-    //     if (this.scene.player.life > 0) {
-    //       if (this.scene.player.y < this.y) {
-    //         if (riding) {
-    //           closestElevator.setVelocityY(-350);
-    //         } else if (closestElevator.y < this.y) {
-    //           closestElevator.setVelocityY(350);
-    //         } else if (Phaser.Math.Distance.BetweenPoints(this, closestElevator) < 96) {
-    //           closestElevator.setVelocityY(-350);
-    //           this.direction = 0;
-    //         } else if (closestElevator.x > this.x) {
-    //           this.direction = 1;
-    //         } else {
-    //           this.direction = -1;
-    //         }
-    //       } else if (riding) {
-    //         closestElevator.setVelocityY(350);
-    //       }
-    //       const x1 = this.x + (this.scene.player.x > this.x ? 20 : -20);
-    //       const y1 = this.y - 16;
-    //       const x2 = this.scene.player.x;
-    //       const y2 = this.scene.keys.S.isDown ? this.scene.player.y + 16 : this.scene.player.y - 16;
-    //       const line = new Phaser.Geom.Line(x1, y1 + 16, x2, y2 + 16);
-    //       const overlappingTiles = this.scene.fg.getTilesWithinShape(line, {
-    //         isColliding: true,
-    //       });
-    //       if (!overlappingTiles.length) {
-    //         this.scene.lasers.fire(x1, y1, x2, y2, 'yellowLaser');
-    //       } else if (~~(Math.random() * 2) > 0) {
-    //         this.scene.lasers.fire(x1, y1, x2, y2 - 48, 'yellowLaser');
-    //       }
-    //     }
-    //   }
-    // }
+  shoot() {    
+    if (this.currentCooldown < 0) {
+      this.currentCooldown = this.maxCooldown;
+      this.sprite.scene.lasers.fire(
+        this.sprite.x,
+        this.sprite.y - 12,
+        this.target.x,
+        this.target.bot.stateMachine.isCurrentState('crouch') ? this.target.y + 20 : this.target.y - 12,
+        'yellowLaser',
+        false,
+      );
+    }
+  }
+  targetIsOnLeft() {
+    return this.target.x < this.sprite.x;
+  }
+  targetIsOnRight() {
+    return this.target.x > this.sprite.x;
+  }
+  isBlockedOnLeft() {
+    return this.sprite.body.blocked.left
+      || !this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x - 16, this.sprite.y + 64);
+  }
+  isBlockedOnRight() {
+    return this.sprite.body.blocked.right
+      || !this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x + 16, this.sprite.y + 64);
+  }
+  idleOnUpdate() {
+    super.idleOnUpdate();
+    this.target = this.sprite.scene.player;
+    if (!this.target) {
+      return;
+    }
+    if (this.target.bot.health < 1) { 
+      return;
+    }
+    if (Phaser.Math.Distance.BetweenPoints(this.sprite, this.target) > 1000) {
+      return;
+    }
+    this.shoot();
+    if (this.target.y < this.sprite.y) {
+      this.stateMachine.setState('call');
+    } else if (this.isBlockedOnRight()) {
+      this.stateMachine.setState(this.targetIsOnLeft() ? 'forward' : 'backward');
+    } else if (this.isBlockedOnLeft()) {
+      this.stateMachine.setState(this.targetIsOnLeft() ? 'backward' : 'forward');
+    } else {
+      this.stateMachine.setState(Phaser.Math.RND.pick(['forward', 'backward']));
+    }
+  }
+  coreOnEnter() {
+    this.sprite.setTexture('sprites', 'yellowCore');
+    super.coreOnEnter();
+  }
+  forwardOnUpdate() {
+    super.forwardOnUpdate();
+    this.sprite.flipX = this.targetIsOnLeft();
+    if (this.target.y < this.sprite.y) {
+      this.stateMachine.setState('call');
+    } else if (this.targetIsOnLeft()) {
+      if (this.isBlockedOnLeft()) {
+        this.stateMachine.setState('backward');
+      } else {
+        this.sprite.setVelocityX(-this.speed);
+      }
+    } else {
+      if (this.isBlockedOnRight()) {
+        this.stateMachine.setState('backward');
+      } else {
+        this.sprite.setVelocityX(this.speed);
+      }
+    }
+    if (this.currentCooldown < 1) {
+      this.stateMachine.setState('idle');
+    }
+  }
+  backwardOnUpdate() {
+    super.backwardOnUpdate();
+    this.sprite.flipX = this.targetIsOnLeft();
+    if (this.target.y > this.y) {
+      this.stateMachine.setState('call');
+    } else if (this.targetIsOnLeft()) {
+      if (this.isBlockedOnRight()) {
+        this.stateMachine.setState('forward');
+      } else {
+        this.sprite.setVelocityX(this.speed);
+      }
+    } else {
+      if (this.isBlockedOnLeft()) {
+        this.stateMachine.setState('forward');
+      } else {
+        this.sprite.setVelocityX(-this.speed);
+      }
+    }
+    if (this.currentCooldown < 1) {
+      this.stateMachine.setState('idle');
+    }
+  }
+  callOnEnter() {
+    this.sprite.play('idle');    
+    this.sprite.setVelocityX(0);
+    this.closestElevator = this.sprite.scene.physics.closest(this.sprite, this.sprite.scene.elevators);
+    this.closestElevator.setVelocityY(350);
+  }
+  callOnUpdate() {
+    this.shoot();
+    if (this.closestElevator.y > this.sprite.y) {
+      if (this.closestElevator.x < this.sprite.x) {
+        if (this.targetIsOnLeft()) {
+          this.stateMachine.setState('approachForward');
+        } else {
+          this.stateMachine.setState('approachBackward');
+        }
+      } else {
+        if (this.targetIsOnLeft()) {
+          this.stateMachine.setState('approachBackward');
+        } else {
+          this.stateMachine.setState('approachForward');
+        }
+      }      
+    }
+  }
+  approachForwardOnEnter() {
+    super.forwardOnEnter();
+  }
+  approachForwardOnUpdate() {
+    this.sprite.flipX = this.targetIsOnLeft();
+    if (Phaser.Math.Distance.BetweenPoints(this.sprite, this.closestElevator) < 80) {
+      this.stateMachine.setState('ride');
+      return;
+    }
+    if (this.closestElevator.x < this.sprite.x) {
+      this.sprite.setVelocityX(-this.speed);
+      if (!this.targetIsOnLeft()) {
+        this.stateMachine.setState('approachBackward');
+      }
+    } else {
+      this.sprite.setVelocityX(this.speed);
+      if (this.targetIsOnLeft()) {
+        this.stateMachine.setState('approachBackward');
+      }
+    }      
+  }
+  approachForwardOnExit() { 
+    super.forwardOnExit();   
+  }
+  approachBackwardOnEnter() {
+    super.backwardOnEnter();
+  }
+  approachBackwardOnUpdate() {
+    this.sprite.flipX = this.targetIsOnLeft();
+    if (Phaser.Math.Distance.BetweenPoints(this.sprite, this.closestElevator) < 80) {
+      this.stateMachine.setState('ride');
+      return;
+    }
+    if (this.closestElevator.x < this.sprite.x) {
+      this.sprite.setVelocityX(-this.speed);
+      if (this.targetIsOnLeft()) {
+        this.stateMachine.setState('approachForward');
+      }
+    } else {
+      this.sprite.setVelocityX(this.speed);
+      if (!this.targetIsOnLeft()) {
+        this.stateMachine.setState('approachForward');
+      }
+    }      
+  }
+  approachBackwardOnExit() {    
+    super.backwardOnExit();
+  }
+  rideOnEnter() {
+    this.sprite.play('idle');
+    this.sprite.setVelocityX(0);
+    this.closestElevator.setVelocityY(-350);
+  }
+  rideOnUpdate() {
+    this.shoot();
+    if (this.sprite.y + 256 < this.target.y) {
+      this.closestElevator.setVelocityY(350);
+      this.stateMachine.setState('jump');
+    }
   }
 }

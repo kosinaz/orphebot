@@ -1,84 +1,50 @@
 import Elevabot from './elevabot.js';
-import Elevator from './elevator.js';
-import Felibot from './felibot.js';
 import Lasers from './lasers.js';
 import Phaser from './phaser.js';
-import PlayerController from './playerController.js';
+import Player from './player.js';
+import BotSprite from './botSprite.js';
+import ElevatorSprite from './elevatorSprite.js';
 
 export default class LevelScene extends Phaser.Scene {
   preload() {
     this.load.tilemapTiledJSON('level1', 'data/level1.json');
   }
   create() {
-    const map = this.make.tilemap({
-      key: 'level1',
-    });
+    const map = this.make.tilemap({key: 'level1'});
     const tileset = map.addTilesetImage('tileset', 'tileset');
     this.bg = map.createLayer('bg', tileset);
     this.bg.setCollisionByExclusion([115, 116, 126]);
     this.fg = map.createLayer('fg', tileset);
     this.fg.setCollisionBetween(0, 200);
-    this.player = map.createFromObjects('obj', {
-      classType: Felibot,
-      frame: 182,
-      name: 'Felibot',
-      key: 'bots',
-    })[0];
-    this.playerController = new PlayerController(this.player);
-    this.players = this.physics.add.group({
-      gravityY: 2100,
-    });
-    this.players.add(this.player);
-    this.physics.add.collider(this.players, this.fg);
-    this.elevabots = map.createFromObjects('obj', {
-      classType: Elevabot,
-      frame: 208,
-      name: 'Elevabot',
-      key: 'bots',
-    });
-    this.physics.add.collider(this.elevabots, this.fg);
-    this.elevators = map.createFromObjects('obj', {
-      classType: Elevator,
-      frame: 'elevator',
-      name: 'Elevator',
-      key: 'sprites',
-    });
-    this.physics.add.collider(this.players, this.elevators);
-    this.physics.add.collider(this.elevators, this.bg);
-    this.keys = this.input.keyboard.addKeys('W,A,S,D,UP,LEFT,DOWN,RIGHT,SPACE,ENTER');
-    this.lasers = new Lasers(this);
-    this.physics.add.collider(this.lasers, this.fg, (laser) => {
-      laser.setActive(false);
-      laser.setVisible(false);
-      laser.body.reset(0, 0);
-    });
-    this.physics.add.collider(this.lasers, this.elevators, (elevator, laser) => {
-      laser.setActive(false);
-      laser.setVisible(false);
-      laser.body.reset(0, 0);
-    });
-    this.physics.add.collider(this.lasers, this.elevabots, (elevabot, laser) => {
-      if (laser.friendly) {  
-        elevabot.damage(10);
+    this.player = null;
+    this.bots = [];
+    this.elevators = [];
+    map.getObjectLayer('obj').objects.forEach(obj => {
+      switch (obj.name) {
+        case 'player': {
+          this.player = new BotSprite(this, obj.x, obj.y, 'bots', 182);
+          new Player(this.player);
+					this.cameras.main.startFollow(this.player, true);
+          break;
+        }
+        case 'elevabot': {
+          let bot = new BotSprite(this, obj.x, obj.y, 'bots', 208);
+          this.bots.push(bot); 
+          new Elevabot(bot);
+          break;
+        }
+        case 'elevator': {
+          this.elevators.push(new ElevatorSprite(this, obj.x, obj.y));
+          break;
+        }
       }
-      laser.setActive(false);
-      laser.setVisible(false);
-      laser.body.reset(0, 0);
     });
-    this.physics.add.collider(this.lasers, this.players, (laser, player) => {
-      if (!laser.friendly) {  
-        player.damage(10);
-      }
-      laser.setActive(false);
-      laser.setVisible(false);
-      laser.body.reset(0, 0);
-    });
-    this.cameras.main.startFollow(this.player);
+    this.lasers = this.add.existing(new Lasers(this));
   }
   update(t, dt) {
-    this.children.list.forEach(gameObject => {
-      gameObject.update();
+    this.player.bot.update(dt);
+    this.bots.forEach(bot => {
+      bot.bot.update(dt);
     });
-    this.playerController.update(dt);
   }
 }

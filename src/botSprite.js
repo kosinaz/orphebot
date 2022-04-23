@@ -1,0 +1,23 @@
+import Phaser from './phaser.js';
+
+export default class BotSprite extends Phaser.Physics.Arcade.Sprite {
+  constructor(...args) {
+    super(...args);
+    this.scene.add.existing(this);
+    this.scene.physics.add.existing(this);
+    this.scene.physics.add.collider(this, this.scene.fg);
+    this.scene.physics.add.collider(this, this.scene.elevators);
+    this.scene.physics.add.overlap(this, this.scene.bots, (player, bot) => {
+      if (bot.bot.stateMachine.isCurrentState('core')) {
+        bot.destroy();
+        bot.bot.stateMachine.setState('dead');
+      }
+    });
+    this.x += 32;
+    this.y -= 64;
+    this.setPushable(false);
+    this.setGravity(0, 2100);
+    this.setSize(32, 100);
+    this.setOffset(16, 28);
+  }
+}

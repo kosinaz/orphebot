@@ -1,15 +1,15 @@
 export default class StateMachine {
-	get previousStateName()	{
-    return this.previousState ? this.previousState.name : '';
-	}
 	constructor(context, id) {
-		this.id = id || (++StateMachine.idCount).toString();
+		this.id = `${(++StateMachine.idCount).toString()} ${id}`;
 		this.context = context;
     this.states = new Map();  
     this.previousState = null;
     this.currentState = null;
     this.isChangingState = false;
     this.changeStateQueue = [];
+	}
+	get previousStateName()	{
+    return this.previousState ? this.previousState.name : '';
 	}
 	isCurrentState(name) {
     return this.currentState ? this.currentState.name === name : false;
@@ -18,9 +18,9 @@ export default class StateMachine {
 		const context = this.context;		
 		this.states.set(name, {
 			name,
-			onEnter: config.onEnter ? config.onEnter.bind(context) : null,
-			onUpdate: config.onUpdate ? config.onUpdate.bind(context) : null,
-			onExit: config.onExit ? config.onExit.bind(context) : null,
+			onEnter: config && config.onEnter ? config.onEnter.bind(context) : null,
+			onUpdate: config && config.onUpdate ? config.onUpdate.bind(context) : null,
+			onExit: config && config.onExit ? config.onExit.bind(context) : null,
 		})
 		return this;
 	}
