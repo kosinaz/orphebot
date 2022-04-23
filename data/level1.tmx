@@ -160,7 +160,7 @@
 </data>
  </layer>
  <objectgroup id="2" name="obj">
-  <object id="41" name="player" gid="351" x="5888" y="3456" width="64" height="128"/>
+  <object id="41" name="player" gid="351" x="3776" y="3904" width="64" height="128"/>
   <object id="50" name="elevabot" gid="377" x="3584" y="4032" width="64" height="128"/>
   <object id="52" name="elevator" gid="403" x="1728" y="3520" width="192" height="128"/>
   <object id="53" name="elevator" gid="403" x="3264" y="3520" width="192" height="128"/>

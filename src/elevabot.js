@@ -22,6 +22,7 @@ export default class Elevabot extends Bot {
     this.speed = 80;
     this.maxCooldown = 60;
     this.currentCooldown = 60;
+    this.cores = ['yellowCore', 'yellowCore', 'yellowCore'];
   }
   shoot() {    
     if (this.currentCooldown < 0) {
@@ -72,10 +73,6 @@ export default class Elevabot extends Bot {
     } else {
       this.stateMachine.setState(Phaser.Math.RND.pick(['forward', 'backward']));
     }
-  }
-  coreOnEnter() {
-    this.sprite.setTexture('sprites', 'yellowCore');
-    super.coreOnEnter();
   }
   forwardOnUpdate() {
     super.forwardOnUpdate();

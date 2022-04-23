@@ -9,6 +9,7 @@ export default class BotSprite extends Phaser.Physics.Arcade.Sprite {
     this.scene.physics.add.collider(this, this.scene.elevators);
     this.scene.physics.add.overlap(this, this.scene.bots, (player, bot) => {
       if (bot.bot.stateMachine.isCurrentState('core')) {
+        player.bot.cores.unshift(bot.bot.cores[0]);
         bot.destroy();
         bot.bot.stateMachine.setState('dead');
       }

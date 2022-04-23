@@ -14,11 +14,23 @@ export default class Player extends Bot {
     this.speed = 160;
     this.maxCooldown = 30;
     this.currentCooldown = 30;
+    this.canJump = true;
+    this.canRide = false;
+    this.cores = ['yellowCore', 'greenCore', 'greenCore'];
   } 
   update(dt) {
     super.update(dt);
-    if (this.pointer.isDown && !this.stateMachine.isCurrentState('core')) {
+    if (this.pointer.isDown 
+      && !this.stateMachine.isCurrentState('core')
+      && !this.stateMachine.isCurrentState('dead')) {
       this.shoot();
+    }
+    let closestElevator = this.sprite.scene.physics.closest(this.sprite, this.sprite.scene.elevators);
+    if (this.keys.W.isDown && this.canRide) {
+      closestElevator.setVelocityY(-350);
+    }
+    if (this.keys.S.isDown && this.canRide) {
+      closestElevator.setVelocityY(350);
     }
   }
   shoot() {
@@ -60,17 +72,17 @@ export default class Player extends Bot {
     if (this.keys.S.isDown) {
       this.stateMachine.setState('crouch');
     }
-    if (this.keys.SPACE.isDown) {
+    if (this.keys.SPACE.isDown && this.canJump) {
       this.sprite.setVelocityY(-600);  
       this.stateMachine.setState('jump');   
     }
   }
-  coreOnEnter() {
-    this.sprite.setTexture('sprites', 'greenCore');
-    super.coreOnEnter();
-  }
   forwardOnEnter()	{
-		this.sprite.play('run');
+		if (this.frame === 182) {
+      this.sprite.play('run');
+    } else {
+      this.sprite.play('walk');
+    }
 	}
 	forwardOnUpdate() {
     if (this.pointer.x <= 960) {
@@ -107,7 +119,11 @@ export default class Player extends Bot {
     }
   }
   backwardOnEnter()	{
-		this.sprite.playReverse('run');
+    if (this.frame === 182) {
+      this.sprite.playReverse('run');
+    } else {
+      this.sprite.playReverse('walk');
+    }
 	}
 	backwardOnUpdate() {
     if (this.pointer.x <= 960) {
@@ -187,6 +203,7 @@ export default class Player extends Bot {
   }
   createAnimations() {
     super.createAnimations();
+    this.sprite.anims.remove('crouch');
     this.sprite.anims.create({
       key: 'crouch',
       frames: this.sprite.anims.generateFrameNumbers('bots', {
@@ -195,6 +212,7 @@ export default class Player extends Bot {
       frameRate: 8,
       repeat: -1
     });
+    this.sprite.anims.remove('run');
     this.sprite.anims.create({
       key: 'run',
       frames: this.sprite.anims.generateFrameNumbers('bots', {
