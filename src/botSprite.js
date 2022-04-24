@@ -13,6 +13,9 @@ export default class BotSprite extends Phaser.Physics.Arcade.Sprite {
         bot.destroy();
         bot.bot.bar.destroy();
         bot.bot.stateMachine.setState('dead');
+        if (player.bot.updateCounter) {
+          player.bot.updateCounter();
+        }
       }
     });
     this.x += 32;
