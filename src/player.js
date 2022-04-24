@@ -8,7 +8,15 @@ export default class Player extends Bot {
       onUpdate: this.crouchOnUpdate,
       onExit: this.crouchOnExit,
     });
-    this.keys = this.sprite.scene.input.keyboard.addKeys('W,A,S,D,SPACE');
+    this.keys = this.sprite.scene.input.keyboard.addKeys('W,A,S,D,R,SPACE');
+    this.keys.R.on('up', () => {
+      if (this.stateMachine.isCurrentState('core')
+        || this.stateMachine.isCurrentState('dead')) {
+        return;
+      }
+      this.health = 0;
+      this.stateMachine.setState('core');
+    })
     this.pointer = this.sprite.scene.input.activePointer;
     this.health = 100;
     this.speed = 160;
@@ -70,7 +78,7 @@ export default class Player extends Bot {
     }
   }
   noneIsDown() {
-    return Object.values(this.keys).every(key => !key.isDown);
+    return Object.values(this.keys).every(key => key.isUp);
   }
   idleOnUpdate() {
     super.idleOnUpdate();
