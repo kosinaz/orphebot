@@ -1,3 +1,4 @@
+import Bar from './bar.js';
 import StateMachine from './stateMachine.js';
 
 export default class Bot {
@@ -26,6 +27,9 @@ export default class Bot {
       onEnter: this.coreOnEnter,
       onUpdate: this.coreOnUpdate,
     }).addState('dead').setState('idle');
+    this.bar = this.sprite.scene.add.existing(new Bar(this.sprite.scene, this.sprite, () => {
+      return this.health;
+    }))
   }
   damage(amount) {
     this.health -= amount;
@@ -35,12 +39,14 @@ export default class Bot {
       } else {
         this.stateMachine.setState('dead');
         this.sprite.destroy();
+        this.bar.destroy();
       }
     }
   }
   update(dt) {
     this.stateMachine.update(dt);
     this.currentCooldown -= 1;
+    this.bar.update();
   }
   fall() {
     if (!this.sprite.body.blocked.down) {
@@ -87,13 +93,17 @@ export default class Bot {
   coreOnEnter() {
     this.sprite.stop();
     this.sprite.setTexture('sprites', this.cores.shift());
+    if (this.updateCounter) {
+      this.updateCounter();
+    }
     this.sprite.setVelocityY(-600);
     this.sprite.setSize(24, 24);
     this.sprite.setDragX(60);
-    this.regenerationTime = 500;
   }
   coreOnUpdate() {
-    if (--this.regenerationTime < 0) {
+    this.health += 0.2;
+    if (this.health > 100) {
+      this.health = 100;
       this.sprite.setVelocityY(-900);
       let bots = {
         'greenCore': {

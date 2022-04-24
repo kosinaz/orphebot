@@ -24,7 +24,7 @@ export default class Elevabot extends Bot {
     this.currentCooldown = 60;
     this.cores = ['yellowCore', 'yellowCore', 'yellowCore'];
   }
-  shoot() {    
+  shoot() {
     if (this.currentCooldown < 0) {
       this.currentCooldown = this.maxCooldown;
       this.sprite.scene.lasers.fire(
@@ -57,7 +57,7 @@ export default class Elevabot extends Bot {
     if (!this.target) {
       return;
     }
-    if (this.target.bot.health < 1) { 
+    if (this.target.bot.stateMachine.isCurrentState('core')) { 
       return;
     }
     if (Phaser.Math.Distance.BetweenPoints(this.sprite, this.target) > 1000) {

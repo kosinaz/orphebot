@@ -17,7 +17,9 @@ export default class Player extends Bot {
     this.canJump = true;
     this.canRide = false;
     this.laser = 'greenLaser';
-    this.cores = ['yellowCore', 'greenCore', 'greenCore'];
+    this.cores = ['greenCore', 'greenCore', 'greenCore'];
+    this.coreCounter = this.sprite.scene.add.group();
+    this.updateCounter();
   } 
   update(dt) {
     super.update(dt);
@@ -33,6 +35,24 @@ export default class Player extends Bot {
     if (this.keys.S.isDown && this.canRide) {
       closestElevator.setVelocityY(350);
     }
+  }
+  updateCounter() {
+    this.coreCounter.clear(true);
+    this.coreCounter.createFromConfig({
+      classType: Phaser.GameObjects.Image,
+      key: 'sprites',
+      frame: this.cores,
+      setXY: {
+        x: 32,
+        y: 32,
+        stepX: 32,
+      },
+      setScrollFactor: {
+        x: 0,
+        y: 0,
+      }
+    });
+    this.coreCounter.propertyValueSet('depth', 1);
   }
   shoot() {
     if (this.currentCooldown < 0) {
