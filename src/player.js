@@ -23,13 +23,15 @@ export default class Player extends Bot {
   } 
   update(dt) {
     super.update(dt);
-    if (this.pointer.isDown 
-      && !this.stateMachine.isCurrentState('core')
-      && !this.stateMachine.isCurrentState('dead')) {
+    if (this.stateMachine.isCurrentState('core')
+      || this.stateMachine.isCurrentState('dead')) {
+      return;
+    }
+    if (this.pointer.isDown) {
       this.shoot();
     }
     let closestElevator = this.sprite.scene.physics.closest(this.sprite, this.sprite.scene.elevators);
-    if (this.keys.W.isDown && this.canRide) {
+    if ((this.keys.W.isDown || this.keys.SPACE.isDown) && this.canRide) {
       closestElevator.setVelocityY(-350);
     }
     if (this.keys.S.isDown && this.canRide) {
@@ -90,10 +92,10 @@ export default class Player extends Bot {
         this.stateMachine.setState('backward');
       }
     }
-    if (this.keys.S.isDown) {
+    if (this.keys.S.isDown && this.canJump) {
       this.stateMachine.setState('crouch');
     }
-    if (this.keys.SPACE.isDown && this.canJump) {
+    if ((this.keys.SPACE.isDown || this.keys.W.isDown ) && this.canJump) {
       this.sprite.setVelocityY(-600);  
       this.stateMachine.setState('jump');   
     }
@@ -124,10 +126,10 @@ export default class Player extends Bot {
         this.stateMachine.setState('backward');
       }
     }
-    if (this.keys.S.isDown) {
+    if (this.keys.S.isDown && this.canJump) {
       this.stateMachine.setState('crouch');
     }
-    if (this.keys.SPACE.isDown) {
+    if ((this.keys.SPACE.isDown || this.keys.W.isDown ) && this.canJump) {
       this.sprite.setVelocityY(-600);
       this.stateMachine.setState('jump');      
     }
@@ -165,10 +167,10 @@ export default class Player extends Bot {
         this.stateMachine.setState('forward');
       }
     }
-    if (this.keys.S.isDown) {
+    if (this.keys.S.isDown && this.canJump) {
       this.stateMachine.setState('crouch');
     }
-    if (this.keys.SPACE.isDown) {
+    if ((this.keys.SPACE.isDown || this.keys.W.isDown ) && this.canJump) {
       this.sprite.setVelocityY(-600);
       this.stateMachine.setState('jump');      
     }
@@ -207,7 +209,7 @@ export default class Player extends Bot {
     if (this.pointer.x > 960) {
       this.sprite.flipX = false;
     }
-    if (this.keys.SPACE.isDown) {
+    if ((this.keys.SPACE.isDown || this.keys.W.isDown ) && this.canJump) {
       this.sprite.setVelocityY(-600);
       this.stateMachine.setState('jump');      
     }

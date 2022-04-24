@@ -1,4 +1,5 @@
 import Elevabot from './elevabot.js';
+import Felibot from './felibot.js';
 import Lasers from './lasers.js';
 import Phaser from './phaser.js';
 import Player from './player.js';
@@ -32,6 +33,12 @@ export default class LevelScene extends Phaser.Scene {
           let bot = new BotSprite(this, obj.x, obj.y, 'bots', 208);
           this.bots.push(bot); 
           new Elevabot(bot);
+          break;
+        }
+        case 'felibot': {
+          let bot = new BotSprite(this, obj.x, obj.y, 'bots', 182);
+          this.bots.push(bot); 
+          new Felibot(bot);
           break;
         }
         case 'elevator': {

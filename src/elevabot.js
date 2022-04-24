@@ -125,6 +125,12 @@ export default class Elevabot extends Bot {
     this.closestElevator.setVelocityY(350);
   }
   callOnUpdate() {
+    if (this.target.bot.stateMachine.isCurrentState('core')) { 
+      return;
+    }
+    if (Phaser.Math.Distance.BetweenPoints(this.sprite, this.target) > 1000) {
+      return;
+    }
     this.shoot();
     if (this.closestElevator.y > this.sprite.y) {
       if (this.closestElevator.x < this.sprite.x) {
@@ -202,6 +208,12 @@ export default class Elevabot extends Bot {
     this.closestElevator.setVelocityY(-350);
   }
   rideOnUpdate() {
+    if (this.target.bot.stateMachine.isCurrentState('core')) { 
+      return;
+    }
+    if (Phaser.Math.Distance.BetweenPoints(this.sprite, this.target) > 1000) {
+      return;
+    }
     this.shoot();
     if (this.sprite.y + 256 < this.target.y) {
       this.closestElevator.setVelocityY(350);

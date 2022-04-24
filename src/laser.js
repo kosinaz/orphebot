@@ -14,7 +14,7 @@ export default class Laser extends Phaser.Physics.Arcade.Sprite {
       laser.body.reset(0, 0);
     });
     this.scene.physics.add.collider(this, this.scene.bots, (laser, bot) => {
-      if (laser.friendly) {
+      if (!bot.bot.stateMachine.isCurrentState('core') && laser.friendly) {
         bot.bot.damage(10);
       }
       laser.setActive(false);
@@ -22,7 +22,7 @@ export default class Laser extends Phaser.Physics.Arcade.Sprite {
       laser.body.reset(0, 0);
     });
     this.scene.physics.add.collider(this, this.scene.player, (laser, player) => {
-      if (!laser.friendly) {  
+      if (!player.bot.stateMachine.isCurrentState('core') && !laser.friendly) {  
         player.bot.damage(10);
       }
       laser.setActive(false);
