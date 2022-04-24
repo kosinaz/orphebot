@@ -103,6 +103,7 @@ export default class Bot {
           currentCooldown: 30,
           canJump: true,
           canRide: false,
+          laser: 'greenLaser',
         },
         'yellowCore': {
           frame: 208,          
@@ -111,6 +112,7 @@ export default class Bot {
           currentCooldown: 60,
           canJump: false,
           canRide: true,
+          laser: 'yellowLaser',
         },
       }
       this.frame = bots[this.sprite.frame.name].frame;
@@ -119,6 +121,7 @@ export default class Bot {
       this.currentCooldown = bots[this.sprite.frame.name].currentCooldown;
       this.canJump = bots[this.sprite.frame.name].canJump;
       this.canRide = bots[this.sprite.frame.name].canRide;
+      this.laser = bots[this.sprite.frame.name].laser;
       this.sprite.setTexture('bots', this.frame);
       this.createAnimations();
       this.sprite.setSize(32, 100);

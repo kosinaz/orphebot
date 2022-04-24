@@ -16,6 +16,7 @@ export default class Player extends Bot {
     this.currentCooldown = 30;
     this.canJump = true;
     this.canRide = false;
+    this.laser = 'greenLaser';
     this.cores = ['yellowCore', 'greenCore', 'greenCore'];
   } 
   update(dt) {
@@ -41,7 +42,7 @@ export default class Player extends Bot {
         this.stateMachine.isCurrentState('crouch') ? this.sprite.y + 20 : this.sprite.y - 12,
         this.pointer.worldX,
         this.pointer.worldY,
-        'greenLaser',
+        this.laser,
         true,
       );
     }

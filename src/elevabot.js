@@ -99,7 +99,7 @@ export default class Elevabot extends Bot {
   backwardOnUpdate() {
     super.backwardOnUpdate();
     this.sprite.flipX = this.targetIsOnLeft();
-    if (this.target.y > this.y) {
+    if (this.target.y < this.sprite.y) {
       this.stateMachine.setState('call');
     } else if (this.targetIsOnLeft()) {
       if (this.isBlockedOnRight()) {
@@ -147,6 +147,9 @@ export default class Elevabot extends Bot {
   }
   approachForwardOnUpdate() {
     this.sprite.flipX = this.targetIsOnLeft();
+    if (this.sprite.y - 64 < this.target.y) {
+      this.stateMachine.setState('idle');
+    }
     if (Phaser.Math.Distance.BetweenPoints(this.sprite, this.closestElevator) < 80) {
       this.stateMachine.setState('ride');
       return;
@@ -171,6 +174,9 @@ export default class Elevabot extends Bot {
   }
   approachBackwardOnUpdate() {
     this.sprite.flipX = this.targetIsOnLeft();
+    if (this.sprite.y - 64 < this.target.y) {
+      this.stateMachine.setState('idle');
+    }
     if (Phaser.Math.Distance.BetweenPoints(this.sprite, this.closestElevator) < 80) {
       this.stateMachine.setState('ride');
       return;

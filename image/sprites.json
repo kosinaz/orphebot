@@ -2,7 +2,7 @@
 
 {
 	"filename": "elevator",
-	"frame": {"x":0,"y":24,"w":192,"h":128},
+	"frame": {"x":0,"y":64,"w":192,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":192,"h":128},
@@ -25,6 +25,14 @@
 	"sourceSize": {"w":12,"h":16}
 },
 {
+	"filename": "portal",
+	"frame": {"x":72,"y":0,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64}
+},
+{
 	"filename": "yellowCore",
 	"frame": {"x":48,"y":0,"w":24,"h":24},
 	"rotated": false,
@@ -45,8 +53,8 @@
 	"version": "1.0",
 	"image": "sprites.png",
 	"format": "RGBA8888",
-	"size": {"w":192,"h":152},
+	"size": {"w":192,"h":192},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:86bf559de4982a80bf94e1e6fd30de03:13ecf03bfb97cab1060a890bd54fabbc:1eabdf11f75e3a4fe3147baf7b5be24b$"
+	"smartupdate": "$TexturePacker:SmartUpdate:f7addf188e17aa021a42b4aecf7e6231:9b7076eff2aba4136fcff5e3e0e1eb06:1eabdf11f75e3a4fe3147baf7b5be24b$"
 }
 }

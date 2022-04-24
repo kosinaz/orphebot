@@ -19,6 +19,7 @@ export default class LevelScene extends Phaser.Scene {
     this.player = null;
     this.bots = [];
     this.elevators = [];
+    this.portal = null;
     map.getObjectLayer('obj').objects.forEach(obj => {
       switch (obj.name) {
         case 'player': {
@@ -35,6 +36,13 @@ export default class LevelScene extends Phaser.Scene {
         }
         case 'elevator': {
           this.elevators.push(new ElevatorSprite(this, obj.x, obj.y));
+          break;
+        }
+        case 'portal': {
+          this.portal = this.physics.add.image(obj.x + 32, obj.y - 32, 'sprites', 'portal');
+          this.physics.add.overlap(this.player, this.portal, () => {            
+            this.scene.restart();
+          });
           break;
         }
       }
