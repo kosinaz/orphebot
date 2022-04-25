@@ -6,7 +6,7 @@ export default class MenuScene extends Phaser.Scene {
     this.add.image(0, 0, 'title').setOrigin(0).setInteractive().on('pointerup', () => {
       this.scene.add('LevelScene', LevelScene);
       this.scene.start('LevelScene');
-      this.sound.add('slowRider', {
+      this.sound.add('techRise', {
         loop: true,
       }).play();
     });

@@ -108,13 +108,6 @@ export default class Player extends Bot {
       this.stateMachine.setState('jump');   
     }
   }
-  forwardOnEnter()	{
-		if (this.frame === 182) {
-      this.sprite.play('run');
-    } else {
-      this.sprite.play('walk');
-    }
-	}
 	forwardOnUpdate() {
     if (this.pointer.x <= 960) {
       this.sprite.flipX = true;
@@ -149,13 +142,6 @@ export default class Player extends Bot {
       this.stateMachine.setState('idle');
     }
   }
-  backwardOnEnter()	{
-    if (this.frame === 182) {
-      this.sprite.playReverse('run');
-    } else {
-      this.sprite.playReverse('walk');
-    }
-	}
 	backwardOnUpdate() {
     if (this.pointer.x <= 960) {
       this.sprite.flipX = true;
@@ -242,16 +228,6 @@ export default class Player extends Bot {
       }),
       frameRate: 8,
       repeat: -1
-    });
-    this.sprite.anims.remove('run');
-    this.sprite.anims.create({
-      key: 'run',
-      frames: this.sprite.anims.generateFrameNumbers('bots', {
-        start: this.frame + 4,
-        end: this.frame + 11,
-      }),
-      frameRate: 16,
-      repeat: -1,
     });
   }
 }

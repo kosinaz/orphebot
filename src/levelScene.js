@@ -5,13 +5,14 @@ import Phaser from './phaser.js';
 import Player from './player.js';
 import BotSprite from './botSprite.js';
 import ElevatorSprite from './elevatorSprite.js';
+import Arachbot from './arachbot.js';
 
 export default class LevelScene extends Phaser.Scene {
   preload() {
-    this.load.tilemapTiledJSON('level1', 'data/level1.json');
+    this.load.tilemapTiledJSON('level', 'data/level2.json');
   }
   create() {
-    const map = this.make.tilemap({key: 'level1'});
+    const map = this.make.tilemap({key: 'level'});
     const tileset = map.addTilesetImage('tileset', 'tileset');
     this.bg = map.createLayer('bg', tileset);
     this.bg.setCollisionByExclusion([115, 116, 126]);
@@ -39,6 +40,16 @@ export default class LevelScene extends Phaser.Scene {
           let bot = new BotSprite(this, obj.x, obj.y, 'bots', 182);
           this.bots.push(bot); 
           new Felibot(bot);
+          break;
+        }
+        case 'arachbot': {
+          obj.x += obj.rotation === 90 ? 32 : 0;
+          obj.x += obj.rotation === 180 ? -96 : 0;
+          obj.y += obj.rotation === 180 ? 128 : 0;
+          obj.x += obj.rotation === 270 ? -96 : 0;
+          let bot = new BotSprite(this, obj.x, obj.y, 'bots', 78);
+          this.bots.push(bot); 
+          new Arachbot(bot);
           break;
         }
         case 'elevator': {

@@ -124,6 +124,15 @@ export default class Bot {
           canRide: true,
           laser: 'yellowLaser',
         },
+        'blueCore': {
+          frame: 78,          
+          speed: 80,
+          maxCooldown: 60,
+          currentCooldown: 60,
+          canJump: false,
+          canRide: false,
+          laser: 'blueLaser',
+        },
       }
       this.frame = bots[this.sprite.frame.name].frame;
       this.speed = bots[this.sprite.frame.name].speed;
@@ -159,7 +168,7 @@ export default class Bot {
         start: this.frame + 4,
         end: this.frame + 11,
       }),
-      frameRate: 8,
+      frameRate: 16,
       repeat: -1,
     });
     this.sprite.anims.remove('jump');

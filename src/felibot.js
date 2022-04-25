@@ -66,9 +66,6 @@ export default class Felibot extends Bot {
       this.stateMachine.setState(Phaser.Math.RND.pick(['forward', 'backward']));
     }
   }
-  forwardOnEnter()	{
-		this.sprite.play('run');
-	}
   forwardOnUpdate() {
     super.forwardOnUpdate();
     this.sprite.flipX = this.targetIsOnLeft();
@@ -92,9 +89,6 @@ export default class Felibot extends Bot {
       this.stateMachine.setState('idle');
     }
   }
-  backwardOnEnter()	{
-    this.sprite.playReverse('run');
-	}
   backwardOnUpdate() {
     super.backwardOnUpdate();
     this.sprite.flipX = this.targetIsOnLeft();
@@ -134,18 +128,5 @@ export default class Felibot extends Bot {
   jumpOnUpdate() {
     super.jumpOnUpdate();
     this.sprite.flipX = this.targetIsOnLeft();
-  }
-  createAnimations() {
-    super.createAnimations();
-    this.sprite.anims.remove('run');
-    this.sprite.anims.create({
-      key: 'run',
-      frames: this.sprite.anims.generateFrameNumbers('bots', {
-        start: this.frame + 4,
-        end: this.frame + 11,
-      }),
-      frameRate: 16,
-      repeat: -1,
-    });
   }
 }
