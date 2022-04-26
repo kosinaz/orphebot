@@ -87,6 +87,7 @@ export default class Arachbot extends Bot {
     return !!(this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x, this.sprite.y + 96));
   }
   idleOnEnter() {    
+    this.sprite.setGravity(0, 0);
 		this.sprite.play('idle');
     this.sprite.setVelocityX(0);
     this.sprite.setVelocityY(0);
@@ -278,5 +279,5 @@ export default class Arachbot extends Bot {
     } else if (this.isBlockedOnUp() || this.currentCooldown < 1) {
       this.stateMachine.setState('idle');
     } 
-  }  
+  }
 }

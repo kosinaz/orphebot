@@ -96,15 +96,15 @@ export default class Bot {
     if (this.updateCounter) {
       this.updateCounter();
     }
+    this.sprite.setGravity(0, 2100);
     this.sprite.setVelocityY(-600);
     this.sprite.setSize(24, 24);
-    this.sprite.setDragX(60);
+    this.sprite.setDragX(60);    
   }
   coreOnUpdate() {
     this.health += 0.2;
     if (this.health > 100) {
       this.health = 100;
-      this.sprite.setVelocityY(-900);
       let bots = {
         'greenCore': {
           frame: 182,          
@@ -145,7 +145,12 @@ export default class Bot {
       this.createAnimations();
       this.sprite.setSize(32, 100);
       this.sprite.setOffset(16, 28);
-      this.sprite.setDragX(0);
+      this.sprite.setDragX(0);      
+      this.sprite.setGravity(0, this.frame === 78 ? 0 : 2100);      
+      this.sprite.flipX = false;
+      this.sprite.flipY = false;
+      this.sprite.angle = 0;
+      this.sprite.body.reset(this.sprite.x, this.sprite.y - 64);
       this.health = 100;
       this.stateMachine.setState('idle');
     }
