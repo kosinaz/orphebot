@@ -227,11 +227,6 @@
 </data>
  </layer>
  <objectgroup id="2" name="obj">
-  <object id="86" name="player" gid="351" x="1280" y="6080" width="64" height="128"/>
-  <object id="93" name="arachbot" gid="247" x="896" y="4224" width="64" height="128"/>
-  <object id="98" name="arachbot" gid="247" x="1024" y="5824" width="64" height="128" rotation="180"/>
-  <object id="96" name="arachbot" gid="247" x="1664" y="4288" width="64" height="128" rotation="90"/>
-  <object id="97" name="arachbot" gid="247" x="1408" y="4416" width="64" height="128" rotation="270"/>
-  <object id="95" name="arachbot" gid="247" x="320" y="4544" width="64" height="128"/>
+  <object id="86" name="player" gid="351" x="960" y="4224" width="64" height="128"/>
  </objectgroup>
 </map>

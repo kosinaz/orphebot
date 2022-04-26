@@ -8,6 +8,54 @@ export default class Player extends Bot {
       onUpdate: this.crouchOnUpdate,
       onExit: this.crouchOnExit,
     });
+    this.stateMachine.addState('idleOnDown', {
+      onEnter: this.idleOnDownOnEnter,
+      onUpdate: this.idleOnDownOnUpdate,
+    });
+    this.stateMachine.addState('idleOnUp', {
+      onEnter: this.idleOnUpOnEnter,
+      onUpdate: this.idleOnUpOnUpdate,
+    });
+    this.stateMachine.addState('idleOnLeft', {
+      onEnter: this.idleOnLeftOnEnter,
+      onUpdate: this.idleOnLeftOnUpdate,
+    });
+    this.stateMachine.addState('idleOnRight', {
+      onEnter: this.idleOnRightOnEnter,
+      onUpdate: this.idleOnRightOnUpdate,
+    });
+    this.stateMachine.addState('onDownToLeft', {
+      onEnter: this.onDownToLeftOnEnter,
+      onUpdate: this.onDownToLeftOnUpdate,
+    });
+    this.stateMachine.addState('onDownToRight', {
+      onEnter: this.onDownToRightOnEnter,
+      onUpdate: this.onDownToRightOnUpdate,
+    });
+    this.stateMachine.addState('onUpToLeft', {
+      onEnter: this.onUpToLeftOnEnter,
+      onUpdate: this.onUpToLeftOnUpdate,
+    });
+    this.stateMachine.addState('onUpToRight', {
+      onEnter: this.onUpToRightOnEnter,
+      onUpdate: this.onUpToRightOnUpdate,
+    });
+    this.stateMachine.addState('onLeftToDown', {
+      onEnter: this.onLeftToDownOnEnter,
+      onUpdate: this.onLeftToDownOnUpdate,
+    });
+    this.stateMachine.addState('onLeftToUp', {
+      onEnter: this.onLeftToUpOnEnter,
+      onUpdate: this.onLeftToUpOnUpdate,
+    });
+    this.stateMachine.addState('onRightToDown', {
+      onEnter: this.onRightToDownOnEnter,
+      onUpdate: this.onRightToDownOnUpdate,
+    });
+    this.stateMachine.addState('onRightToUp', {
+      onEnter: this.onRightToUpOnEnter,
+      onUpdate: this.onRightToUpOnUpdate,
+    });
     this.keys = this.sprite.scene.input.keyboard.addKeys('W,A,S,D,R,SPACE');
     this.keys.R.on('up', () => {
       if (this.stateMachine.isCurrentState('core')
@@ -24,8 +72,9 @@ export default class Player extends Bot {
     this.currentCooldown = 30;
     this.canJump = true;
     this.canRide = false;
+    this.canClimb = false;
     this.laser = 'greenLaser';
-    this.cores = ['greenCore', 'greenCore', 'greenCore'];
+    this.cores = ['blueCore', 'greenCore', 'greenCore'];
     this.coreCounter = this.sprite.scene.add.group();
     this.updateCounter();
   } 
@@ -80,7 +129,23 @@ export default class Player extends Bot {
   noneIsDown() {
     return Object.values(this.keys).every(key => key.isUp);
   }
+  isBlockedOnLeft() {
+    return !!(this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x - 96, this.sprite.y));
+  }
+  isBlockedOnRight() {
+    return !!(this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x + 96, this.sprite.y));
+  }
+  isBlockedOnUp() {
+    return !!(this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x, this.sprite.y - 96));
+  }
+  isBlockedOnDown() {
+    return !!(this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x, this.sprite.y + 96));
+  }
   idleOnUpdate() {
+    if (this.canClimb) {
+      this.stateMachine.setState('idleOnDown');
+      return;
+    }
     super.idleOnUpdate();
     if (this.pointer.x <= 960) {
       this.sprite.flipX = true;
@@ -217,6 +282,198 @@ export default class Player extends Bot {
   crouchOnExit() {    
     this.sprite.setSize(32, 100);
     this.sprite.setOffset(16, 28);
+  }
+  idleOnDownOnEnter() {
+		this.sprite.play('idle');
+    this.sprite.flipY = false;
+    this.sprite.angle = 0;
+    this.sprite.setSize(32, 100);
+    this.sprite.setOffset(16, 28);
+    this.sprite.body.reset(this.sprite.x, this.sprite.y);
+    this.sprite.setVelocityX(0);
+    this.sprite.setVelocityY(100); 
+  }
+  idleOnDownOnUpdate() {
+    if (this.keys.A.isDown) {
+      this.stateMachine.setState('onDownToLeft');
+    }
+    if (this.keys.D.isDown) {
+      this.stateMachine.setState('onDownToRight');
+    }
+  }
+  idleOnUpOnEnter() {
+		this.sprite.play('idle');
+    this.sprite.flipY = true;
+    this.sprite.angle = 0;
+    this.sprite.setSize(32, 100);
+    this.sprite.setOffset(16, 0);
+    this.sprite.body.reset(this.sprite.x, this.sprite.y);
+    this.sprite.setVelocityX(0);
+    this.sprite.setVelocityY(-100); 
+  }
+  idleOnUpOnUpdate() {
+    if (this.keys.A.isDown) {
+      this.stateMachine.setState('onUpToLeft');
+    }
+    if (this.keys.D.isDown) {
+      this.stateMachine.setState('onUpToRight');
+    }
+  }
+  idleOnLeftOnEnter() {
+		this.sprite.play('idle');
+    this.sprite.flipY = false;
+    this.sprite.angle = 90;
+    this.sprite.setSize(100, 32);
+    this.sprite.setOffset(-32, 48);
+    this.sprite.body.reset(this.sprite.x, this.sprite.y);
+    this.sprite.setVelocityX(-100);
+    this.sprite.setVelocityY(0); 
+  }
+  idleOnLeftOnUpdate() {
+    if (this.keys.W.isDown) {
+      this.stateMachine.setState('onLeftToUp');
+    }
+    if (this.keys.S.isDown) {
+      this.stateMachine.setState('onLeftToDown');
+    }
+  }
+  idleOnRightOnEnter() {
+		this.sprite.play('idle');
+    this.sprite.flipY = true;
+    this.sprite.angle = 90;
+    this.sprite.setSize(100, 32);
+    this.sprite.setOffset(-4, 48);
+    this.sprite.body.reset(this.sprite.x, this.sprite.y);
+    this.sprite.setVelocityX(100);
+    this.sprite.setVelocityY(0); 
+  }
+  idleOnRightOnUpdate() {
+    if (this.keys.W.isDown) {
+      this.stateMachine.setState('onRightToUp');
+    }
+    if (this.keys.S.isDown) {
+      this.stateMachine.setState('onRightToDown');
+    }
+  }
+  onDownToLeftOnEnter()	{
+		this.sprite.play('walk');
+    this.sprite.flipX = true;
+    this.sprite.setVelocityX(-this.speed);
+	}
+  onDownToLeftOnUpdate() {
+    if (!this.isBlockedOnDown()) {
+      this.sprite.body.reset(this.sprite.x - 64, this.sprite.y + 72);
+      this.stateMachine.setState('idleOnRight');
+    } else if (this.isBlockedOnLeft()) {
+      this.stateMachine.setState('idleOnLeft');
+    } else if (!this.keys.A.isDown) {
+      this.stateMachine.setState('idleOnDown');
+    }
+  }
+  onDownToRightOnEnter()	{
+		this.sprite.play('walk');
+    this.sprite.flipX = false;
+    this.sprite.setVelocityX(this.speed);
+	}
+  onDownToRightOnUpdate() { 
+    if (!this.isBlockedOnDown()) {
+      this.sprite.body.reset(this.sprite.x + 64, this.sprite.y + 72);
+      this.stateMachine.setState('idleOnLeft');
+    } else if (this.isBlockedOnRight()) {
+      this.stateMachine.setState('idleOnRight');
+    } else if (!this.keys.D.isDown) {
+      this.stateMachine.setState('idleOnDown');
+    }
+  }
+  onUpToLeftOnEnter()	{
+		this.sprite.play('walk');
+    this.sprite.flipX = true;
+    this.sprite.setVelocityX(-this.speed);
+	}
+  onUpToLeftOnUpdate() {
+    if (!this.isBlockedOnUp()) {      
+      this.sprite.body.reset(this.sprite.x - 64, this.sprite.y - 72);
+      this.stateMachine.setState('idleOnRight');
+    } else if (this.isBlockedOnLeft()) {
+      this.stateMachine.setState('idleOnLeft');
+    } else if (!this.keys.A.isDown) {
+      this.stateMachine.setState('idleOnUp');
+    }
+  }
+  onUpToRightOnEnter()	{
+		this.sprite.play('walk');
+    this.sprite.flipX = false;
+    this.sprite.setVelocityX(this.speed);
+	}
+  onUpToRightOnUpdate() {
+    if (!this.isBlockedOnUp()) {
+      this.sprite.body.reset(this.sprite.x + 64, this.sprite.y - 72);
+      this.stateMachine.setState('idleOnLeft');
+    } else if (this.isBlockedOnRight()) {
+      this.stateMachine.setState('idleOnRight');
+    } else if (!this.keys.D.isDown) {
+      this.stateMachine.setState('idleOnUp');
+    }
+  }
+  onLeftToDownOnEnter()	{
+		this.sprite.play('walk');
+    this.sprite.flipX = false;
+    this.sprite.setVelocityY(this.speed);
+	}
+  onLeftToDownOnUpdate() {
+    if (!this.isBlockedOnLeft()) {
+      this.sprite.body.reset(this.sprite.x - 72, this.sprite.y + 64);
+      this.stateMachine.setState('idleOnUp');
+    } else if (this.isBlockedOnDown()) {
+      this.stateMachine.setState('idleOnDown');
+    } else if (!this.keys.S.isDown) {
+      this.stateMachine.setState('idleOnLeft');
+    }
+  }
+  onLeftToUpOnEnter()	{
+		this.sprite.play('walk');
+    this.sprite.flipX = true;
+    this.sprite.setVelocityY(-this.speed);
+	}
+  onLeftToUpOnUpdate() {
+    if (!this.isBlockedOnLeft()) {      
+      this.sprite.body.reset(this.sprite.x - 72, this.sprite.y - 64);
+      this.stateMachine.setState('idleOnDown');
+    } else if (this.isBlockedOnUp()) {
+      this.stateMachine.setState('idleOnUp');
+    } else if (!this.keys.W.isDown) {
+      this.stateMachine.setState('idleOnLeft');
+    }
+  }
+  onRightToDownOnEnter()	{
+		this.sprite.play('walk');
+    this.sprite.flipX = false;
+    this.sprite.setVelocityY(this.speed);
+	}
+  onRightToDownOnUpdate() {
+    if (!this.isBlockedOnRight()) {
+      this.sprite.body.reset(this.sprite.x + 72, this.sprite.y + 64);
+      this.stateMachine.setState('idleOnUp');
+    } else if (this.isBlockedOnDown()) {
+      this.stateMachine.setState('idleOnDown');
+    } else if (!this.keys.S.isDown) {
+      this.stateMachine.setState('idleOnRight');
+    }
+  }
+  onRightToUpOnEnter()	{
+		this.sprite.play('walk');
+    this.sprite.flipX = true;
+    this.sprite.setVelocityY(-this.speed);
+	}
+  onRightToUpOnUpdate() {
+    if (!this.isBlockedOnRight()) {
+      this.sprite.body.reset(this.sprite.x + 72, this.sprite.y - 64);
+      this.stateMachine.setState('idleOnDown');
+    } else if (this.isBlockedOnUp()) {
+      this.stateMachine.setState('idleOnUp');
+    } else if (!this.keys.W.isDown) {
+      this.stateMachine.setState('idleOnRight');
+    }
   }
   createAnimations() {
     super.createAnimations();

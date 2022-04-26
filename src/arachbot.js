@@ -86,8 +86,7 @@ export default class Arachbot extends Bot {
   isBlockedOnDown() {
     return !!(this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x, this.sprite.y + 96));
   }
-  idleOnEnter() {    
-    this.sprite.setGravity(0, 0);
+  idleOnEnter() {
 		this.sprite.play('idle');
     this.sprite.setVelocityX(0);
     this.sprite.setVelocityY(0);
