@@ -26,6 +26,9 @@ export default class Elevabot extends Bot {
   }
   shoot() {
     if (this.currentCooldown < 0) {
+      let sound = Phaser.Math.RND.pick(this.sprite.scene.laserSounds);
+      sound.volume = 0.10;
+      sound.play();
       this.currentCooldown = this.maxCooldown;
       this.sprite.scene.lasers.fire(
         this.sprite.x,
@@ -60,7 +63,7 @@ export default class Elevabot extends Bot {
     if (this.target.bot.stateMachine.isCurrentState('core')) { 
       return;
     }
-    if (Phaser.Math.Distance.BetweenPoints(this.sprite, this.target) > 1000) {
+    if (!this.isVisible()) {
       return;
     }
     this.shoot();

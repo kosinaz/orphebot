@@ -57,9 +57,12 @@ export default class Arachbot extends Bot {
   // }
   shoot() {
     if (this.currentCooldown < 0) {
+      let sound = Phaser.Math.RND.pick(this.sprite.scene.laserSounds);
+      sound.volume = 0.10;
+      sound.play();
       this.currentCooldown = this.maxCooldown;
       this.sprite.scene.lasers.fire(
-        this.sprite.x,
+        this.sprite.x + (this.target.x < this.sprite.x ? -32 : 32),
         this.sprite.y - 12,
         this.target.x,
         this.target.bot.stateMachine.isCurrentState('crouch') ? this.target.y + 20 : this.target.y - 12,
@@ -93,11 +96,16 @@ export default class Arachbot extends Bot {
   }
   idleOnUpdate() {
     this.target = this.sprite.scene.player;
-    if (this.target
-      && !this.target.bot.stateMachine.isCurrentState('core')
-      && Phaser.Math.Distance.BetweenPoints(this.sprite, this.target) < 1000) {
-      this.shoot();
+    if (!this.target) {
+      return;
     }
+    if (this.target.bot.stateMachine.isCurrentState('core')) { 
+      return;
+    }
+    if (!this.isVisible()) {
+      return;
+    }
+    this.shoot();
     let dirs = [];
     if (this.isBlockedOnDown() && !this.isBlockedOnLeft()) {
       dirs.push('onDownToLeft');

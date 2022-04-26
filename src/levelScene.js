@@ -9,10 +9,28 @@ import Arachbot from './arachbot.js';
 
 export default class LevelScene extends Phaser.Scene {
   preload() {
-    this.load.tilemapTiledJSON('level', 'data/level2.json');
+    this.load.tilemapTiledJSON('level1', 'data/level1.json');
+    this.load.tilemapTiledJSON('level2', 'data/level2.json');
+    this.load.audio('slowRider', 'audio/music_zapsplat_slow_rider.mp3');
+    this.load.audio('techRise', 'audio/music_zapsplat_tech_rise.mp3');
+    this.load.audio('laser1', 'audio/laser_1.mp3');
+    this.load.audio('laser2', 'audio/laser_2.mp3');
+    this.load.audio('laser3', 'audio/laser_3.mp3');
+    this.load.audio('core', 'audio/glitchedtones_Robot Impact.mp3');
   }
-  create() {
-    const map = this.make.tilemap({key: 'level'});
+  create(args) {
+    const level = args.level || 1;
+    this.music = this.sound.add(['slowRider', 'techRise'][level - 1], {
+      loop: true,
+    });
+    this.music.play();
+    this.laserSounds = [
+      this.sound.add('laser1'), 
+      this.sound.add('laser2'),
+      this.sound.add('laser3'),
+    ];
+    this.coreSound = this.sound.add('core');
+    const map = this.make.tilemap({key: `level${level}`});
     const tileset = map.addTilesetImage('tileset', 'tileset');
     this.bg = map.createLayer('bg', tileset);
     this.bg.setCollisionByExclusion([115, 116, 126]);
@@ -28,6 +46,10 @@ export default class LevelScene extends Phaser.Scene {
           this.player = new BotSprite(this, obj.x, obj.y, 'bots', 182);
           new Player(this.player);
 					this.cameras.main.startFollow(this.player, true);
+          if (args.cores) {
+            this.player.bot.cores = args.cores;
+            this.player.bot.updateCounter();
+          }
           break;
         }
         case 'elevabot': {
@@ -58,8 +80,12 @@ export default class LevelScene extends Phaser.Scene {
         }
         case 'portal': {
           this.portal = this.physics.add.image(obj.x + 32, obj.y - 32, 'sprites', 'portal');
-          this.physics.add.overlap(this.player, this.portal, () => {            
-            this.scene.restart();
+          this.physics.add.overlap(this.player, this.portal, () => {    
+            this.sound.stopAll();
+            this.scene.restart({
+              level: level % 2 + 1,
+              cores: this.player.bot.cores,
+            });
           });
           break;
         }

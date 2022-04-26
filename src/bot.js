@@ -48,6 +48,12 @@ export default class Bot {
     this.currentCooldown -= 1;
     this.bar.update();
   }
+  isVisible() {
+    let view = this.sprite.scene.cameras.main.worldView;
+    view.setSize(view.width + 64, view.height + 64);
+    view.setPosition(view.x - 32, view.y - 32);
+    return view.contains(this.sprite.x, this.sprite.y);
+  }
   fall() {
     if (!this.sprite.body.blocked.down) {
       this.stateMachine.setState('jump'); 
@@ -91,6 +97,9 @@ export default class Bot {
     }
   }
   coreOnEnter() {
+    let sound = this.sprite.scene.coreSound;
+    sound.volume = 0.10;
+    sound.play();
     this.sprite.stop();
     this.sprite.setTexture('sprites', this.cores.shift());
     if (this.updateCounter) {

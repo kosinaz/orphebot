@@ -7,6 +7,7 @@ new Phaser.Game({
   physics: {
     default: 'arcade',
     arcade: {
+      tileBias: 64,
       // debug: true,
     },
   },

@@ -3,8 +3,6 @@ import MenuScene from './menuScene.js';
 
 export default class LoadScene extends Phaser.Scene {
   preload() {    
-    this.load.audio('slowRider', 'audio/music_zapsplat_slow_rider.mp3');
-    this.load.audio('techRise', 'audio/music_zapsplat_tech_rise.mp3');
     this.load.image('title', 'image/title.png');
     this.load.image('tileset', 'image/tileset.png');
     this.load.spritesheet('bots', 'image/bots.png', { 

@@ -74,7 +74,7 @@ export default class Player extends Bot {
     this.canRide = false;
     this.canClimb = false;
     this.laser = 'greenLaser';
-    this.cores = ['blueCore', 'greenCore', 'greenCore'];
+    this.cores = ['greenCore', 'greenCore', 'greenCore'];
     this.coreCounter = this.sprite.scene.add.group();
     this.updateCounter();
   } 
@@ -115,6 +115,9 @@ export default class Player extends Bot {
   }
   shoot() {
     if (this.currentCooldown < 0) {
+      let sound = Phaser.Math.RND.pick(this.sprite.scene.laserSounds);
+      sound.volume = 0.25;
+      sound.play();
       this.currentCooldown = this.maxCooldown;
       this.sprite.scene.lasers.fire(
         this.sprite.x,
