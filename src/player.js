@@ -65,7 +65,8 @@ export default class Player extends Bot {
       this.health = 0;
       this.stateMachine.setState('core');
     })
-    this.pointer = this.sprite.scene.input.activePointer;
+    this.pointer = this.sprite.scene.input.activePointer;    
+    this.cross = this.sprite.scene.cross;
     this.health = 100;
     this.speed = 160;
     this.maxCooldown = 30;
@@ -122,8 +123,8 @@ export default class Player extends Bot {
       this.sprite.scene.lasers.fire(
         this.sprite.x,
         this.stateMachine.isCurrentState('crouch') ? this.sprite.y + 20 : this.sprite.y - 12,
-        this.pointer.worldX,
-        this.pointer.worldY,
+        this.cross.x,
+        this.cross.y,
         this.laser,
         true,
       );
@@ -150,7 +151,7 @@ export default class Player extends Bot {
       return;
     }
     super.idleOnUpdate();
-    if (this.pointer.x <= 960) {
+    if (this.cross.x <= this.sprite.x) {
       this.sprite.flipX = true;
       if (this.keys.A.isDown) {
         this.stateMachine.setState('forward');
@@ -159,7 +160,7 @@ export default class Player extends Bot {
         this.stateMachine.setState('backward');
       }
     }
-    if (this.pointer.x > 960) {
+    if (this.cross.x > this.sprite.x) {
       this.sprite.flipX = false;
       if (this.keys.D.isDown) {
         this.stateMachine.setState('forward');
@@ -177,7 +178,7 @@ export default class Player extends Bot {
     }
   }
 	forwardOnUpdate() {
-    if (this.pointer.x <= 960) {
+    if (this.cross.x <= this.sprite.x) {
       this.sprite.flipX = true;
       if (this.keys.A.isDown) {
         this.sprite.setVelocityX(-this.speed);
@@ -186,7 +187,7 @@ export default class Player extends Bot {
         this.stateMachine.setState('backward');
       }
     }
-    if (this.pointer.x > 960) {
+    if (this.cross.x > this.sprite.x) {
       this.sprite.flipX = false;
       if (this.keys.D.isDown) {
         this.sprite.setVelocityX(this.speed);
@@ -211,7 +212,7 @@ export default class Player extends Bot {
     }
   }
 	backwardOnUpdate() {
-    if (this.pointer.x <= 960) {
+    if (this.cross.x <= this.sprite.x) {
       this.sprite.flipX = true;
       if (this.keys.D.isDown) {
         this.sprite.setVelocityX(this.speed);
@@ -220,7 +221,7 @@ export default class Player extends Bot {
         this.stateMachine.setState('forward');
       }
     }
-    if (this.pointer.x > 960) {
+    if (this.cross.x > this.sprite.x) {
       this.sprite.flipX = false;
       if (this.keys.A.isDown) {
         this.sprite.setVelocityX(-this.speed);
@@ -245,10 +246,10 @@ export default class Player extends Bot {
   }
   jumpOnUpdate() {
     super.jumpOnUpdate();
-    if (this.pointer.x <= 960) {
+    if (this.cross.x <= this.sprite.x) {
       this.sprite.flipX = true;
     }
-    if (this.pointer.x > 960) {
+    if (this.cross.x > this.sprite.x) {
       this.sprite.flipX = false;
     }
     if (this.keys.D.isDown) {
@@ -265,10 +266,10 @@ export default class Player extends Bot {
     this.sprite.setOffset(16, 64);
   }
   crouchOnUpdate() {
-    if (this.pointer.x <= 960) {
+    if (this.cross.x <= this.sprite.x) {
       this.sprite.flipX = true;
     }
-    if (this.pointer.x > 960) {
+    if (this.cross.x > this.sprite.x) {
       this.sprite.flipX = false;
     }
     if ((this.keys.SPACE.isDown || this.keys.W.isDown ) && this.canJump) {

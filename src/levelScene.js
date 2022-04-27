@@ -30,6 +30,9 @@ export default class LevelScene extends Phaser.Scene {
       this.sound.add('laser3'),
     ];
     this.coreSound = this.sound.add('core');
+    this.sys.canvas.style.cursor = 'none';
+    this.cross = this.add.sprite(0, 0, 'sprites', 'cross');
+    this.cross.setDepth(1);
     const map = this.make.tilemap({key: `level${level}`});
     const tileset = map.addTilesetImage('tileset', 'tileset');
     this.bg = map.createLayer('bg', tileset);
@@ -92,8 +95,12 @@ export default class LevelScene extends Phaser.Scene {
       }
     });
     this.lasers = this.add.existing(new Lasers(this));
+    this.cross.setPosition(this.player.x, this.player.y);
   }
   update(t, dt) {
+    this.input.activePointer.updateWorldPoint(this.cameras.main);
+    this.cross.x = this.input.activePointer.worldX;
+    this.cross.y = this.input.activePointer.worldY;
     this.player.bot.update(dt);
     this.bots.forEach(bot => {
       bot.bot.update(dt);
