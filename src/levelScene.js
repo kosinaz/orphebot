@@ -6,6 +6,8 @@ import Player from './player.js';
 import BotSprite from './botSprite.js';
 import ElevatorSprite from './elevatorSprite.js';
 import Arachbot from './arachbot.js';
+import PauseScene from './pauseScene.js';
+
 
 export default class LevelScene extends Phaser.Scene {
   preload() {
@@ -19,6 +21,20 @@ export default class LevelScene extends Phaser.Scene {
     this.load.audio('core', 'audio/glitchedtones_Robot Impact.mp3');
   }
   create(args) {
+    this.scene.add('PauseScene', PauseScene);
+    const pause = this.add.image(1880, 40, 'sprites', 'pause');
+    pause.setScrollFactor(0);
+    pause.setDepth(2);
+    pause.setInteractive();
+    pause.on('pointerup', () => {
+      this.scene.pause();
+      this.scene.run('PauseScene');
+    }, this);
+    this.keys = this.input.keyboard.addKeys('ESC');
+    this.keys.ESC.on('up', () => {
+      this.scene.pause();
+      this.scene.run('PauseScene');
+    }, this);
     const level = args.level || 1;
     this.music = this.sound.add(['slowRider', 'techRise'][level - 1], {
       loop: true,

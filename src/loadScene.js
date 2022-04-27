@@ -4,6 +4,7 @@ import MenuScene from './menuScene.js';
 export default class LoadScene extends Phaser.Scene {
   preload() {    
     this.load.image('title', 'image/title.png');
+    this.load.image('paused', 'image/paused.png');
     this.load.image('tileset', 'image/tileset.png');
     this.load.spritesheet('bots', 'image/bots.png', { 
       frameWidth: 64, 
