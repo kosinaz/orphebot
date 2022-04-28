@@ -56,7 +56,8 @@ export default class Player extends Bot {
       onEnter: this.onRightToUpOnEnter,
       onUpdate: this.onRightToUpOnUpdate,
     });
-    this.keys = this.sprite.scene.input.keyboard.addKeys('W,A,S,D,R,SPACE');
+    this.keys = this.sprite.scene.input.keyboard.addKeys('UP,LEFT,DOWN,RIGHT, W,A,S,D,R,SPACE');    
+    this.stickKeys = this.sprite.scene.moveStick.createCursorKeys();
     this.keys.R.on('up', () => {
       if (this.stateMachine.isCurrentState('core')
         || this.stateMachine.isCurrentState('dead')) {
@@ -89,12 +90,18 @@ export default class Player extends Bot {
       this.shoot();
     }
     let closestElevator = this.sprite.scene.physics.closest(this.sprite, this.sprite.scene.elevators);
-    if ((this.keys.W.isDown || this.keys.SPACE.isDown) && this.canRide) {
+    if ((this.isUpDown || this.keys.SPACE.isDown) && this.canRide) {
+      let sound = this.sprite.scene.elevatorUpSound;
+      sound.volume = 0.30;
+      sound.play();
       closestElevator.setVelocityY(-350);
     }
-    if (this.keys.S.isDown && this.canRide) {
+    if (this.isDownDown && this.canRide) {
       closestElevator.setVelocityY(350);
-    }
+      let sound = this.sprite.scene.elevatorDownSound;
+      sound.volume = 0.30;
+      sound.play();
+    } 
   }
   updateCounter() {
     this.coreCounter.clear(true);
@@ -116,9 +123,6 @@ export default class Player extends Bot {
   }
   shoot() {
     if (this.currentCooldown < 0) {
-      let sound = Phaser.Math.RND.pick(this.sprite.scene.laserSounds);
-      sound.volume = 0.25;
-      sound.play();
       this.currentCooldown = this.maxCooldown;
       this.sprite.scene.lasers.fire(
         this.sprite.x,
@@ -130,8 +134,20 @@ export default class Player extends Bot {
       );
     }
   }
-  noneIsDown() {
-    return Object.values(this.keys).every(key => key.isUp);
+  get isNoneDown() {
+    return Object.values(this.keys).every(key => key.isUp) && Object.values(this.stickKeys).every(key => key.isUp);
+  }
+  get isLeftDown() {
+    return this.keys.LEFT.isDown || this.keys.A.isDown || this.stickKeys.left.isDown;
+  }
+  get isRightDown() {
+    return this.keys.RIGHT.isDown || this.keys.D.isDown || this.stickKeys.right.isDown;
+  }
+  get isUpDown() {
+    return this.keys.UP.isDown || this.keys.W.isDown || this.keys.SPACE.isDown || this.stickKeys.up.isDown;
+  }
+  get isDownDown() {
+    return this.keys.DOWN.isDown || this.keys.S.isDown || this.stickKeys.down.isDown;
   }
   isBlockedOnLeft() {
     return !!(this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x - 96, this.sprite.y));
@@ -153,26 +169,26 @@ export default class Player extends Bot {
     super.idleOnUpdate();
     if (this.cross.x <= this.sprite.x) {
       this.sprite.flipX = true;
-      if (this.keys.A.isDown) {
+      if (this.isLeftDown) {
         this.stateMachine.setState('forward');
       }
-      if (this.keys.D.isDown) {
+      if (this.isRightDown) {
         this.stateMachine.setState('backward');
       }
     }
     if (this.cross.x > this.sprite.x) {
       this.sprite.flipX = false;
-      if (this.keys.D.isDown) {
+      if (this.isRightDown) {
         this.stateMachine.setState('forward');
       }
-      if (this.keys.A.isDown) {
+      if (this.isLeftDown) {
         this.stateMachine.setState('backward');
       }
     }
-    if (this.keys.S.isDown && this.canJump) {
+    if (this.isDownDown && this.canJump) {
       this.stateMachine.setState('crouch');
     }
-    if ((this.keys.SPACE.isDown || this.keys.W.isDown ) && this.canJump) {
+    if (this.isUpDown && this.canJump) {
       this.sprite.setVelocityY(-600);  
       this.stateMachine.setState('jump');   
     }
@@ -180,33 +196,33 @@ export default class Player extends Bot {
 	forwardOnUpdate() {
     if (this.cross.x <= this.sprite.x) {
       this.sprite.flipX = true;
-      if (this.keys.A.isDown) {
+      if (this.isLeftDown) {
         this.sprite.setVelocityX(-this.speed);
       }
-      if (this.keys.D.isDown) {
+      if (this.isRightDown) {
         this.stateMachine.setState('backward');
       }
     }
     if (this.cross.x > this.sprite.x) {
       this.sprite.flipX = false;
-      if (this.keys.D.isDown) {
+      if (this.isRightDown) {
         this.sprite.setVelocityX(this.speed);
       }
-      if (this.keys.A.isDown) {
+      if (this.isLeftDown) {
         this.stateMachine.setState('backward');
       }
     }
-    if (this.keys.S.isDown && this.canJump) {
+    if (this.isDownDown && this.canJump) {
       this.stateMachine.setState('crouch');
     }
-    if ((this.keys.SPACE.isDown || this.keys.W.isDown ) && this.canJump) {
+    if (this.isUpDown && this.canJump) {
       this.sprite.setVelocityY(-600);
       this.stateMachine.setState('jump');      
     }
     if (!this.sprite.body.blocked.down) {
       this.stateMachine.setState('jump'); 
     }
-    if (this.noneIsDown()) {
+    if (this.isNoneDown) {
       this.sprite.setVelocityX(0);
       this.stateMachine.setState('idle');
     }
@@ -214,33 +230,33 @@ export default class Player extends Bot {
 	backwardOnUpdate() {
     if (this.cross.x <= this.sprite.x) {
       this.sprite.flipX = true;
-      if (this.keys.D.isDown) {
+      if (this.isRightDown) {
         this.sprite.setVelocityX(this.speed);
       }
-      if (this.keys.A.isDown) {
+      if (this.isLeftDown) {
         this.stateMachine.setState('forward');
       }
     }
     if (this.cross.x > this.sprite.x) {
       this.sprite.flipX = false;
-      if (this.keys.A.isDown) {
+      if (this.isLeftDown) {
         this.sprite.setVelocityX(-this.speed);
       }
-      if (this.keys.D.isDown) {
+      if (this.isRightDown) {
         this.stateMachine.setState('forward');
       }
     }
-    if (this.keys.S.isDown && this.canJump) {
+    if (this.isDownDown && this.canJump) {
       this.stateMachine.setState('crouch');
     }
-    if ((this.keys.SPACE.isDown || this.keys.W.isDown ) && this.canJump) {
+    if (this.isUpDown && this.canJump) {
       this.sprite.setVelocityY(-600);
       this.stateMachine.setState('jump');      
     }
     if (!this.sprite.body.blocked.down) {
       this.stateMachine.setState('jump'); 
     }
-    if (this.noneIsDown()) {
+    if (this.isNoneDown) {
       this.stateMachine.setState('idle');
     }
   }
@@ -252,14 +268,17 @@ export default class Player extends Bot {
     if (this.cross.x > this.sprite.x) {
       this.sprite.flipX = false;
     }
-    if (this.keys.D.isDown) {
+    if (this.isRightDown) {
       this.sprite.setVelocityX(this.speed);
     }
-    if (this.keys.A.isDown) {
+    if (this.isLeftDown) {
       this.sprite.setVelocityX(-this.speed);
     }
   }
   crouchOnEnter() {
+    let sound = this.sprite.scene.jumpSound;
+    sound.volume = 0.30;
+    sound.play();
     this.sprite.play('crouch');
     this.sprite.setVelocityX(0);
     this.sprite.setSize(32, 64);
@@ -272,11 +291,11 @@ export default class Player extends Bot {
     if (this.cross.x > this.sprite.x) {
       this.sprite.flipX = false;
     }
-    if ((this.keys.SPACE.isDown || this.keys.W.isDown ) && this.canJump) {
+    if (this.isUpDown && this.canJump) {
       this.sprite.setVelocityY(-600);
       this.stateMachine.setState('jump');      
     }
-    if (!this.keys.S.isDown) {
+    if (!this.isDownDown) {
       this.stateMachine.setState('idle');
     }
     if (!this.sprite.body.blocked.down) {
@@ -284,6 +303,9 @@ export default class Player extends Bot {
     } 
   }
   crouchOnExit() {    
+    let sound = this.sprite.scene.jumpSound;
+    sound.volume = 0.30;
+    sound.play();
     this.sprite.setSize(32, 100);
     this.sprite.setOffset(16, 28);
   }
@@ -298,10 +320,10 @@ export default class Player extends Bot {
     this.sprite.setVelocityY(100); 
   }
   idleOnDownOnUpdate() {
-    if (this.keys.A.isDown) {
+    if (this.isLeftDown) {
       this.stateMachine.setState('onDownToLeft');
     }
-    if (this.keys.D.isDown) {
+    if (this.isRightDown) {
       this.stateMachine.setState('onDownToRight');
     }
   }
@@ -316,10 +338,10 @@ export default class Player extends Bot {
     this.sprite.setVelocityY(-100); 
   }
   idleOnUpOnUpdate() {
-    if (this.keys.A.isDown) {
+    if (this.isLeftDown) {
       this.stateMachine.setState('onUpToLeft');
     }
-    if (this.keys.D.isDown) {
+    if (this.isRightDown) {
       this.stateMachine.setState('onUpToRight');
     }
   }
@@ -334,10 +356,10 @@ export default class Player extends Bot {
     this.sprite.setVelocityY(0); 
   }
   idleOnLeftOnUpdate() {
-    if (this.keys.W.isDown) {
+    if (this.isUpDown) {
       this.stateMachine.setState('onLeftToUp');
     }
-    if (this.keys.S.isDown) {
+    if (this.isDownDown) {
       this.stateMachine.setState('onLeftToDown');
     }
   }
@@ -352,10 +374,10 @@ export default class Player extends Bot {
     this.sprite.setVelocityY(0); 
   }
   idleOnRightOnUpdate() {
-    if (this.keys.W.isDown) {
+    if (this.isUpDown) {
       this.stateMachine.setState('onRightToUp');
     }
-    if (this.keys.S.isDown) {
+    if (this.isDownDown) {
       this.stateMachine.setState('onRightToDown');
     }
   }
@@ -370,7 +392,7 @@ export default class Player extends Bot {
       this.stateMachine.setState('idleOnRight');
     } else if (this.isBlockedOnLeft()) {
       this.stateMachine.setState('idleOnLeft');
-    } else if (!this.keys.A.isDown) {
+    } else if (!this.isLeftDown) {
       this.stateMachine.setState('idleOnDown');
     }
   }
@@ -385,7 +407,7 @@ export default class Player extends Bot {
       this.stateMachine.setState('idleOnLeft');
     } else if (this.isBlockedOnRight()) {
       this.stateMachine.setState('idleOnRight');
-    } else if (!this.keys.D.isDown) {
+    } else if (!this.isRightDown) {
       this.stateMachine.setState('idleOnDown');
     }
   }
@@ -400,7 +422,7 @@ export default class Player extends Bot {
       this.stateMachine.setState('idleOnRight');
     } else if (this.isBlockedOnLeft()) {
       this.stateMachine.setState('idleOnLeft');
-    } else if (!this.keys.A.isDown) {
+    } else if (!this.isLeftDown) {
       this.stateMachine.setState('idleOnUp');
     }
   }
@@ -415,7 +437,7 @@ export default class Player extends Bot {
       this.stateMachine.setState('idleOnLeft');
     } else if (this.isBlockedOnRight()) {
       this.stateMachine.setState('idleOnRight');
-    } else if (!this.keys.D.isDown) {
+    } else if (!this.isRightDown) {
       this.stateMachine.setState('idleOnUp');
     }
   }
@@ -430,7 +452,7 @@ export default class Player extends Bot {
       this.stateMachine.setState('idleOnUp');
     } else if (this.isBlockedOnDown()) {
       this.stateMachine.setState('idleOnDown');
-    } else if (!this.keys.S.isDown) {
+    } else if (!this.isDownDown) {
       this.stateMachine.setState('idleOnLeft');
     }
   }
@@ -445,7 +467,7 @@ export default class Player extends Bot {
       this.stateMachine.setState('idleOnDown');
     } else if (this.isBlockedOnUp()) {
       this.stateMachine.setState('idleOnUp');
-    } else if (!this.keys.W.isDown) {
+    } else if (!this.isUpDown) {
       this.stateMachine.setState('idleOnLeft');
     }
   }
@@ -460,7 +482,7 @@ export default class Player extends Bot {
       this.stateMachine.setState('idleOnUp');
     } else if (this.isBlockedOnDown()) {
       this.stateMachine.setState('idleOnDown');
-    } else if (!this.keys.S.isDown) {
+    } else if (!this.isDownDown) {
       this.stateMachine.setState('idleOnRight');
     }
   }
@@ -475,7 +497,7 @@ export default class Player extends Bot {
       this.stateMachine.setState('idleOnDown');
     } else if (this.isBlockedOnUp()) {
       this.stateMachine.setState('idleOnUp');
-    } else if (!this.keys.W.isDown) {
+    } else if (!this.isUpDown) {
       this.stateMachine.setState('idleOnRight');
     }
   }

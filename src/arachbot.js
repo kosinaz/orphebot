@@ -57,9 +57,6 @@ export default class Arachbot extends Bot {
   // }
   shoot() {
     if (this.currentCooldown < 0) {
-      let sound = Phaser.Math.RND.pick(this.sprite.scene.laserSounds);
-      sound.volume = 0.10;
-      sound.play();
       this.currentCooldown = this.maxCooldown;
       this.sprite.scene.lasers.fire(
         this.sprite.x + (this.target.x < this.sprite.x ? -32 : 32),

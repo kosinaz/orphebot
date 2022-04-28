@@ -26,6 +26,7 @@ export default class Bot {
     }).addState('core', {
       onEnter: this.coreOnEnter,
       onUpdate: this.coreOnUpdate,
+      onExit: this.coreOnExit,
     }).addState('dead').setState('idle');
     this.bar = this.sprite.scene.add.existing(new Bar(this.sprite.scene, this.sprite, () => {
       return this.health;
@@ -71,6 +72,11 @@ export default class Bot {
 		this.sprite.stop();
   }
   forwardOnEnter()	{
+    if (!Phaser.Math.RND.integerInRange(0, 10)) {
+      const sound = Phaser.Math.RND.pick(this.sprite.scene.chatterSounds);
+      sound.volume = 0.20;
+      sound.play();
+    }
     this.sprite.play('walk');
 	}
 	forwardOnUpdate() {
@@ -80,6 +86,11 @@ export default class Bot {
 		this.sprite.stop();
   }
   backwardOnEnter()	{
+    if (!Phaser.Math.RND.integerInRange(0, 10)) {
+      const sound = Phaser.Math.RND.pick(this.sprite.scene.chatterSounds);
+      sound.volume = 0.20;
+      sound.play();
+    }
 		this.sprite.playReverse('walk');
 	}
 	backwardOnUpdate() {
@@ -89,6 +100,9 @@ export default class Bot {
 		this.sprite.stop();
   }
   jumpOnEnter() {
+    let sound = this.sprite.scene.jumpSound;
+    sound.volume = 0.30;
+    sound.play();
     this.sprite.play('jump');
   }
   jumpOnUpdate() {
@@ -97,9 +111,9 @@ export default class Bot {
     }
   }
   coreOnEnter() {
-    let sound = this.sprite.scene.coreSound;
-    sound.volume = 0.10;
-    sound.play();
+    this.coreSound = this.sprite.scene.coreSound;
+    this.coreSound.volume = 0.10;
+    this.coreSound.play();
     this.sprite.stop();
     this.sprite.setTexture('sprites', this.cores.shift());
     if (this.updateCounter) {
@@ -167,6 +181,9 @@ export default class Bot {
       this.health = 100;
       this.stateMachine.setState('idle');
     }
+  }
+  coreOnExit() {
+    this.coreSound.stop();
   }
   createAnimations() {
     this.sprite.anims.remove('idle');

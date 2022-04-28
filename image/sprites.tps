@@ -263,6 +263,37 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">sprites/pause.png</key>
+            <key type="filename">sprites/stick.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>11,11,22,22</rect>
+                <key>scale9Paddings</key>
+                <rect>11,11,22,22</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">sprites/paused.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>50,13,99,25</rect>
+                <key>scale9Paddings</key>
+                <rect>50,13,99,25</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">sprites/portal.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

@@ -26,9 +26,6 @@ export default class Elevabot extends Bot {
   }
   shoot() {
     if (this.currentCooldown < 0) {
-      let sound = Phaser.Math.RND.pick(this.sprite.scene.laserSounds);
-      sound.volume = 0.10;
-      sound.play();
       this.currentCooldown = this.maxCooldown;
       this.sprite.scene.lasers.fire(
         this.sprite.x,
@@ -206,6 +203,9 @@ export default class Elevabot extends Bot {
     super.backwardOnExit();
   }
   rideOnEnter() {
+    let sound = this.sprite.scene.elevatorUpSound;
+    sound.volume = 0.30;
+    sound.play();
     this.sprite.play('idle');
     this.sprite.setVelocityX(0);
     this.closestElevator.setVelocityY(-350);
@@ -219,6 +219,9 @@ export default class Elevabot extends Bot {
     }
     this.shoot();
     if (this.sprite.y + 256 < this.target.y) {
+      let sound = this.sprite.scene.elevatorDownSound;
+      sound.volume = 0.30;
+      sound.play();
       this.closestElevator.setVelocityY(350);
       this.stateMachine.setState('jump');
     }
