@@ -51,8 +51,8 @@ export default class Bot {
   }
   isVisible() {
     let view = this.sprite.scene.cameras.main.worldView;
-    view.setSize(view.width + 64, view.height + 64);
-    view.setPosition(view.x - 32, view.y - 32);
+    view.setSize(view.width + 4, view.height + 4);
+    view.setPosition(view.x - 2, view.y - 2);
     return view.contains(this.sprite.x, this.sprite.y);
   }
   fall() {

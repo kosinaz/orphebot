@@ -100,7 +100,6 @@ export default class LevelScene extends Phaser.Scene {
     this.coreSound = this.sound.add('core', {
       loop: true,
     });
-    this.sys.canvas.style.cursor = 'none';
     this.cross = this.add.sprite(0, 0, 'sprites', 'cross');
     this.cross.setDepth(1);
     const map = this.make.tilemap({key: `level${level}`});
@@ -170,6 +169,7 @@ export default class LevelScene extends Phaser.Scene {
     this.cross.setPosition(this.player.x, this.player.y);
   }
   update(t, dt) {
+    this.sys.canvas.style.cursor = 'none';
     this.input.activePointer.updateWorldPoint(this.cameras.main);
     if (this.aimStick.angle) {
       Phaser.Math.RotateTo(this.cross, this.player.x, this.player.y, Phaser.Math.DEG_TO_RAD * this.aimStick.angle, 256);
