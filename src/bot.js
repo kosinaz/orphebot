@@ -45,9 +45,9 @@ export default class Bot {
     }
   }
   update(dt) {
+    this.bar.update();
     this.stateMachine.update(dt);
     this.currentCooldown -= 1;
-    this.bar.update();
   }
   isVisible() {
     let view = this.sprite.scene.cameras.main.worldView;

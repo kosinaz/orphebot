@@ -118,6 +118,10 @@ export default class Elevabot extends Bot {
       this.stateMachine.setState('idle');
     }
   }
+  jumpOnUpdate() {
+    super.jumpOnUpdate();
+    this.shoot();
+  }
   callOnEnter() {
     this.sprite.play('idle');    
     this.sprite.setVelocityX(0);

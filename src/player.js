@@ -72,11 +72,11 @@ export default class Player extends Bot {
     this.speed = 160;
     this.maxCooldown = 30;
     this.currentCooldown = 30;
-    this.canJump = false;
+    this.canJump = true;
     this.canRide = false;
     this.canClimb = false;
     this.laser = 'greenLaser';
-    this.cores = ['greenCore', 'greenCore', 'greenCore'];
+    this.cores = ['blueCore', 'greenCore', 'greenCore'];
     this.coreCounter = this.sprite.scene.add.group();
     this.updateCounter();
   } 
@@ -103,19 +103,21 @@ export default class Player extends Bot {
       sound.play();
     } 
     let closestClaw = this.sprite.scene.physics.closest(this.sprite, this.sprite.scene.claws);
-    if (this.isDownDown) {
-      closestClaw.setVelocityY(350);
-    }
-    if (this.keys.SPACE.isDown) {
-      closestClaw.release();
-    } else if (this.isUpDown) {
-      closestClaw.setVelocityY(-350); 
-    }
-    if (this.isLeftDown) {
-      closestClaw.crane.setVelocityX(-350);
-    }
-    if (this.isRightDown) { 
-      closestClaw.crane.setVelocityX(350); 
+    if (closestClaw) {
+      if (this.isDownDown) {
+        closestClaw.setVelocityY(350);
+      }
+      if (this.keys.SPACE.isDown) {
+        closestClaw.release();
+      } else if (this.isUpDown) {
+        closestClaw.setVelocityY(-350); 
+      }
+      if (this.isLeftDown) {
+        closestClaw.crane.setVelocityX(-350);
+      }
+      if (this.isRightDown) { 
+        closestClaw.crane.setVelocityX(350); 
+      }
     }
   }
   updateCounter() {
@@ -178,6 +180,7 @@ export default class Player extends Bot {
   }
   idleOnUpdate() {
     if (this.canClimb) {
+      this.sprite.setGravity(0, 0);
       this.stateMachine.setState('idleOnDown');
       return;
     }
@@ -332,7 +335,8 @@ export default class Player extends Bot {
     this.sprite.setOffset(16, 28);
     this.sprite.body.reset(this.sprite.x, this.sprite.y);
     this.sprite.setVelocityX(0);
-    this.sprite.setVelocityY(100); 
+    this.sprite.setVelocityY(100);     
+    this.sprite.setGravity(0, 0); 
   }
   idleOnDownOnUpdate() {
     if (this.isLeftDown) {
@@ -350,7 +354,8 @@ export default class Player extends Bot {
     this.sprite.setOffset(16, 0);
     this.sprite.body.reset(this.sprite.x, this.sprite.y);
     this.sprite.setVelocityX(0);
-    this.sprite.setVelocityY(-100); 
+    this.sprite.setVelocityY(-100);     
+    this.sprite.setGravity(0, 0); 
   }
   idleOnUpOnUpdate() {
     if (this.isLeftDown) {
@@ -358,6 +363,10 @@ export default class Player extends Bot {
     }
     if (this.isRightDown) {
       this.stateMachine.setState('onUpToRight');
+    }
+    if (this.isDownDown) {
+      this.stateMachine.setState('jump');     
+      this.sprite.setGravity(0, 2100); 
     }
   }
   idleOnLeftOnEnter() {
@@ -368,7 +377,8 @@ export default class Player extends Bot {
     this.sprite.setOffset(-32, 48);
     this.sprite.body.reset(this.sprite.x, this.sprite.y);
     this.sprite.setVelocityX(-100);
-    this.sprite.setVelocityY(0); 
+    this.sprite.setVelocityY(0);     
+    this.sprite.setGravity(0, 0); 
   }
   idleOnLeftOnUpdate() {
     if (this.isUpDown) {
@@ -386,7 +396,8 @@ export default class Player extends Bot {
     this.sprite.setOffset(-4, 48);
     this.sprite.body.reset(this.sprite.x, this.sprite.y);
     this.sprite.setVelocityX(100);
-    this.sprite.setVelocityY(0); 
+    this.sprite.setVelocityY(0);     
+    this.sprite.setGravity(0, 0); 
   }
   idleOnRightOnUpdate() {
     if (this.isUpDown) {

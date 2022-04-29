@@ -42,18 +42,17 @@ export default class Arachbot extends Bot {
     this.laser = 'blueLaser';
     this.cores = ['blueCore', 'blueCore', 'blueCore'];
     this.sprite.setGravity(0, 0);
-    // this.dotleft = this.sprite.scene.add.image(this.sprite.x - 96, this.sprite.y, 'sprites', 'blueCore');
-    // this.dotright = this.sprite.scene.add.image(this.sprite.x + 96, this.sprite.y, 'sprites', 'blueCore');
-    // this.dotup = this.sprite.scene.add.image(this.sprite.x, this.sprite.y - 96, 'sprites', 'blueCore');
-    // this.dotdown = this.sprite.scene.add.image(this.sprite.x, this.sprite.y + 96, 'sprites', 'blueCore');
+    // this.dotleft = this.sprite.scene.add.image(this.sprite.x - 96, this.sprite.y + 96, 'sprites', 'blueCore');
+    // this.dotright = this.sprite.scene.add.image(this.sprite.x + 96, this.sprite.y + 96, 'sprites', 'blueCore');
+    // this.dotup = this.sprite.scene.add.image(this.sprite.x - 96, this.sprite.y - 96, 'sprites', 'blueCore');
+    // this.dotdown = this.sprite.scene.add.image(this.sprite.x + 96, this.sprite.y - 96, 'sprites', 'blueCore');
   }
   // update(dt) {
   //   super.update(dt);
-  //   this.dotleft.setPosition(this.sprite.x - 96, this.sprite.y);
-  //   this.dotright.setPosition(this.sprite.x + 96, this.sprite.y);
-  //   this.dotup.setPosition(this.sprite.x, this.sprite.y - 96);
-  //   this.dotdown.setPosition(this.sprite.x, this.sprite.y + 96);
-  
+  //   this.dotleft.setPosition(this.sprite.x - 96, this.sprite.y + 16);
+  //   this.dotright.setPosition(this.sprite.x + 96, this.sprite.y - 16);
+  //   this.dotup.setPosition(this.sprite.x - 96, this.sprite.y - 16);
+  //   this.dotdown.setPosition(this.sprite.x + 96, this.sprite.y + 16);
   // }
   shoot() {
     if (this.currentCooldown < 0) {
@@ -77,19 +76,45 @@ export default class Arachbot extends Bot {
   isBlockedOnLeft() {
     return !!(this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x - 96, this.sprite.y));
   }
+  isBlockedOnLeftDown() {
+    return this.isBlockedOnLeft() || !!(this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x - 96, this.sprite.y + 16));
+  }
+  isBlockedOnLeftUp() {
+    return this.isBlockedOnLeft() || !!(this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x - 96, this.sprite.y - 16));
+  }
   isBlockedOnRight() {
     return !!(this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x + 96, this.sprite.y));
+  }
+  isBlockedOnRightDown() {
+    return this.isBlockedOnRight() || !!(this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x + 96, this.sprite.y + 16));
+  }
+  isBlockedOnRightUp() {
+    return this.isBlockedOnRight() || !!(this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x + 96, this.sprite.y - 16));
   }
   isBlockedOnUp() {
     return !!(this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x, this.sprite.y - 96));
   }
+  isBlockedOnUpLeft() {
+    return this.isBlockedOnUp() || !!(this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x - 16, this.sprite.y - 96));
+  }
+  isBlockedOnUpRight() {
+    return this.isBlockedOnUp() || !!(this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x + 16, this.sprite.y - 96));
+  }
   isBlockedOnDown() {
     return !!(this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x, this.sprite.y + 96));
   }
+  isBlockedOnDownLeft() {
+    return this.isBlockedOnDown() || !!(this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x - 16, this.sprite.y + 96));
+  }
+  isBlockedOnDownRight() {
+    return this.isBlockedOnDown() || !!(this.sprite.scene.fg.getTileAtWorldXY(this.sprite.x + 16, this.sprite.y + 96));
+  }
+  
   idleOnEnter() {
 		this.sprite.play('idle');
     this.sprite.setVelocityX(0);
-    this.sprite.setVelocityY(0);
+    this.sprite.setVelocityY(0);    
+    this.sprite.setGravity(0, 0);   
   }
   idleOnUpdate() {
     this.target = this.sprite.scene.player;
@@ -132,6 +157,15 @@ export default class Arachbot extends Bot {
       this.stateMachine.setState(Phaser.Math.RND.pick(dirs));
     }
   }
+  jumpOnEnter() {
+    super.jumpOnEnter();
+    this.sprite.setGravity(0, 2100);
+    this.sprite.flipX = false;
+    this.sprite.flipY = false;
+    this.sprite.angle = 0;
+    this.sprite.setSize(32, 100);
+    this.sprite.setOffset(16, 28);
+  }
   onDownToLeftOnEnter()	{
 		this.sprite.play('walk');
     this.sprite.flipX = true;
@@ -144,7 +178,9 @@ export default class Arachbot extends Bot {
     this.sprite.setVelocityY(100); 
 	}
   onDownToLeftOnUpdate() {
-    if (!this.isBlockedOnDown()) {
+    if (!this.isBlockedOnDownRight()) {
+      this.stateMachine.setState('jump');
+    } else if (!this.isBlockedOnDown()) {
       this.sprite.body.reset(this.sprite.x - 64, this.sprite.y + 72);
       this.stateMachine.setState('onRightToDown');
     } else if (this.isBlockedOnLeft() || this.currentCooldown < 1) {
@@ -163,7 +199,9 @@ export default class Arachbot extends Bot {
     this.sprite.setVelocityY(100);
 	}
   onDownToRightOnUpdate() { 
-    if (!this.isBlockedOnDown()) {
+    if (!this.isBlockedOnDownLeft()) {
+      this.stateMachine.setState('jump');
+    } else if (!this.isBlockedOnDown()) {
       this.sprite.body.reset(this.sprite.x + 64, this.sprite.y + 72);
       this.stateMachine.setState('onLeftToDown');
     } else if (this.isBlockedOnRight() || this.currentCooldown < 1) {
@@ -182,7 +220,9 @@ export default class Arachbot extends Bot {
     this.sprite.setVelocityY(-100);
 	}
   onUpToLeftOnUpdate() {
-    if (!this.isBlockedOnUp()) {      
+    if (!this.isBlockedOnUpRight()) {
+      this.stateMachine.setState('jump');
+    } else if (!this.isBlockedOnUp()) {      
       this.sprite.body.reset(this.sprite.x - 64, this.sprite.y - 72);
       this.stateMachine.setState('onRightToUp');
     } else if (this.isBlockedOnLeft() || this.currentCooldown < 1) {
@@ -201,7 +241,9 @@ export default class Arachbot extends Bot {
     this.sprite.setVelocityY(-100);
 	}
   onUpToRightOnUpdate() {
-    if (!this.isBlockedOnUp()) {
+    if (!this.isBlockedOnUpLeft()) {
+      this.stateMachine.setState('jump');
+    } else if (!this.isBlockedOnUp()) {
       this.sprite.body.reset(this.sprite.x + 64, this.sprite.y - 72);
       this.stateMachine.setState('onLeftToUp');
     } else if (this.isBlockedOnRight() || this.currentCooldown < 1) {
@@ -220,7 +262,9 @@ export default class Arachbot extends Bot {
     this.sprite.setVelocityY(this.speed);
 	}
   onLeftToDownOnUpdate() {
-    if (!this.isBlockedOnLeft()) {
+    if (!this.isBlockedOnLeftUp()) {
+      this.stateMachine.setState('jump');
+    } else if (!this.isBlockedOnLeft()) {
       this.sprite.body.reset(this.sprite.x - 72, this.sprite.y + 64);
       this.stateMachine.setState('onUpToLeft');
     } else if (this.isBlockedOnDown() || this.currentCooldown < 1) {
@@ -239,7 +283,9 @@ export default class Arachbot extends Bot {
     this.sprite.setVelocityY(-this.speed);
 	}
   onLeftToUpOnUpdate() {
-    if (!this.isBlockedOnLeft()) {      
+    if (!this.isBlockedOnLeftDown()) {
+      this.stateMachine.setState('jump');
+    } else if (!this.isBlockedOnLeft()) {      
       this.sprite.body.reset(this.sprite.x - 72, this.sprite.y - 64);
       this.stateMachine.setState('onDownToLeft');
     } else if (this.isBlockedOnUp() || this.currentCooldown < 1) {
@@ -258,7 +304,9 @@ export default class Arachbot extends Bot {
     this.sprite.setVelocityY(this.speed);
 	}
   onRightToDownOnUpdate() {
-    if (!this.isBlockedOnRight()) {
+    if (!this.isBlockedOnRightUp()) {
+      this.stateMachine.setState('jump');
+    } else if (!this.isBlockedOnRight()) {
       this.sprite.body.reset(this.sprite.x + 72, this.sprite.y + 64);
       this.stateMachine.setState('onUpToRight');
     } else if (this.isBlockedOnDown() || this.currentCooldown < 1) {
@@ -277,7 +325,9 @@ export default class Arachbot extends Bot {
     this.sprite.setVelocityY(-this.speed);
 	}
   onRightToUpOnUpdate() {
-    if (!this.isBlockedOnRight()) {
+    if (!this.isBlockedOnRightDown()) {
+      this.stateMachine.setState('jump');
+    } else if (!this.isBlockedOnRight()) {
       this.sprite.body.reset(this.sprite.x + 72, this.sprite.y - 64);
       this.stateMachine.setState('onDownToRight');
     } else if (this.isBlockedOnUp() || this.currentCooldown < 1) {

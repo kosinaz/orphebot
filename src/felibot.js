@@ -128,5 +128,6 @@ export default class Felibot extends Bot {
   jumpOnUpdate() {
     super.jumpOnUpdate();
     this.sprite.flipX = this.targetIsOnLeft();
+    this.shoot();
   }
 }
