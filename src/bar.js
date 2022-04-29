@@ -5,10 +5,13 @@ export default class Bar extends Phaser.GameObjects.Graphics {
     super(scene);
     this.target = target;
     this.valueCallback = valueCallback;
+    this.setDepth(4);
   }
   update() {
-    this.x = this.target.x;
-    this.y = this.target.y;
+    if (this.target.body) {
+      this.x = this.target.body.x + 16;
+      this.y = this.target.body.y + 32;
+    }
     const value = this.valueCallback();
     this.clear();
     this.fillStyle(0x555555);

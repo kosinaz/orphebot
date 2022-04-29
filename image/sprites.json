@@ -17,6 +17,22 @@
 	"sourceSize": {"w":12,"h":16}
 },
 {
+	"filename": "claw",
+	"frame": {"x":145,"y":95,"w":64,"h":128},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":128},
+	"sourceSize": {"w":64,"h":128}
+},
+{
+	"filename": "crane",
+	"frame": {"x":0,"y":95,"w":65,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":65,"h":64},
+	"sourceSize": {"w":65,"h":64}
+},
+{
 	"filename": "cross",
 	"frame": {"x":108,"y":0,"w":36,"h":36},
 	"rotated": false,
@@ -26,7 +42,7 @@
 },
 {
 	"filename": "elevator",
-	"frame": {"x":64,"y":44,"w":192,"h":128},
+	"frame": {"x":0,"y":223,"w":192,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":192,"h":128},
@@ -58,7 +74,7 @@
 },
 {
 	"filename": "paused",
-	"frame": {"x":0,"y":172,"w":199,"h":51},
+	"frame": {"x":0,"y":44,"w":199,"h":51},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":199,"h":51},
@@ -66,11 +82,19 @@
 },
 {
 	"filename": "portal",
-	"frame": {"x":0,"y":44,"w":64,"h":64},
+	"frame": {"x":65,"y":95,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
 	"sourceSize": {"w":64,"h":64}
+},
+{
+	"filename": "rope",
+	"frame": {"x":129,"y":95,"w":16,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":64},
+	"sourceSize": {"w":16,"h":64}
 },
 {
 	"filename": "stick",
@@ -101,8 +125,8 @@
 	"version": "1.0",
 	"image": "sprites.png",
 	"format": "RGBA8888",
-	"size": {"w":256,"h":223},
+	"size": {"w":232,"h":351},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:92b0b9684c8a164f89d6a4011484c2a3:975a90262624c6d790b87f2751428da5:1eabdf11f75e3a4fe3147baf7b5be24b$"
+	"smartupdate": "$TexturePacker:SmartUpdate:de2a40e34854f578b16d87da791aff59:9fc78eaa8ddf26333f693b2e8ff981cf:1eabdf11f75e3a4fe3147baf7b5be24b$"
 }
 }

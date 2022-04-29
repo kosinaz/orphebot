@@ -72,7 +72,7 @@ export default class Player extends Bot {
     this.speed = 160;
     this.maxCooldown = 30;
     this.currentCooldown = 30;
-    this.canJump = true;
+    this.canJump = false;
     this.canRide = false;
     this.canClimb = false;
     this.laser = 'greenLaser';
@@ -102,6 +102,21 @@ export default class Player extends Bot {
       sound.volume = 0.30;
       sound.play();
     } 
+    let closestClaw = this.sprite.scene.physics.closest(this.sprite, this.sprite.scene.claws);
+    if (this.isDownDown) {
+      closestClaw.setVelocityY(350);
+    }
+    if (this.keys.SPACE.isDown) {
+      closestClaw.release();
+    } else if (this.isUpDown) {
+      closestClaw.setVelocityY(-350); 
+    }
+    if (this.isLeftDown) {
+      closestClaw.crane.setVelocityX(-350);
+    }
+    if (this.isRightDown) { 
+      closestClaw.crane.setVelocityX(350); 
+    }
   }
   updateCounter() {
     this.coreCounter.clear(true);

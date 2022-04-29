@@ -6,14 +6,18 @@ import Player from './player.js';
 import BotSprite from './botSprite.js';
 import ElevatorSprite from './elevatorSprite.js';
 import Arachbot from './arachbot.js';
+import ClawSprite from './clawSprite.js';
+import CraneSprite from './craneSprite.js';
 
 
 export default class LevelScene extends Phaser.Scene {
   preload() {
     this.load.tilemapTiledJSON('level1', 'data/level1.json');
     this.load.tilemapTiledJSON('level2', 'data/level2.json');
+    this.load.tilemapTiledJSON('level3', 'data/level3.json');
     this.load.audio('slowRider', 'audio/music_zapsplat_slow_rider.mp3');
     this.load.audio('techRise', 'audio/music_zapsplat_tech_rise.mp3');
+    this.load.audio('rapidTurnaround', 'audio/music_zapsplat_rapid_turnaround.mp3');
     this.load.audio('chatter1', 'audio/chatter_1.mp3');
     this.load.audio('chatter2', 'audio/chatter_2.mp3');
     this.load.audio('chatter3', 'audio/chatter_3.mp3');
@@ -72,7 +76,7 @@ export default class LevelScene extends Phaser.Scene {
     this.aimStick.thumb.setDepth(3);
     this.aimStick.visible = false;
     const level = args.level || 1;
-    this.music = this.sound.add(['slowRider', 'techRise'][level - 1], {
+    this.music = this.sound.add(['slowRider', 'techRise', 'rapidTurnaround'][level - 1], {
       loop: true,
     });
     this.music.play();
@@ -105,12 +109,14 @@ export default class LevelScene extends Phaser.Scene {
     const map = this.make.tilemap({key: `level${level}`});
     const tileset = map.addTilesetImage('tileset', 'tileset');
     this.bg = map.createLayer('bg', tileset);
-    this.bg.setCollisionByExclusion([115, 116, 126]);
+    this.bg.setCollisionByExclusion([115, 116, 117, 118, 119, 126]);
     this.fg = map.createLayer('fg', tileset);
     this.fg.setCollisionBetween(0, 200);
     this.player = null;
     this.bots = [];
     this.elevators = [];
+    this.claws = [];
+    this.cranes = [];
     this.portal = null;
     map.getObjectLayer('obj').objects.forEach(obj => {
       switch (obj.name) {
@@ -150,6 +156,14 @@ export default class LevelScene extends Phaser.Scene {
           this.elevators.push(new ElevatorSprite(this, obj.x, obj.y));
           break;
         }
+        case 'claw': {
+          this.claws.push(new ClawSprite(this, obj.x, obj.y));
+          break;
+        }
+        case 'crane': {
+          this.cranes.push(new CraneSprite(this, obj.x, obj.y));
+          break;
+        }
         case 'portal': {
           this.portal = this.physics.add.image(obj.x + 32, obj.y - 32, 'sprites', 'portal');
           this.physics.add.overlap(this.player, this.portal, () => {    
@@ -166,6 +180,12 @@ export default class LevelScene extends Phaser.Scene {
       }
     });
     this.lasers = this.add.existing(new Lasers(this));
+    this.claws.forEach(claw => {
+      claw.crane = this.physics.closest(claw, this.cranes);
+      claw.crane.claw = claw;
+      claw.rope = this.add.tileSprite(claw.crane.x, claw.y - 32, 16, claw.y - claw.crane.y - 64, 'sprites', 'rope');
+      claw.rope.setOrigin(0.5, 1);
+    });
     this.cross.setPosition(this.player.x, this.player.y);
   }
   update(t, dt) {
@@ -181,5 +201,8 @@ export default class LevelScene extends Phaser.Scene {
     this.bots.forEach(bot => {
       bot.bot.update(dt);
     });
+    this.claws.forEach(claw => {
+      claw.update();
+    })
   }
 }
