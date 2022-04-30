@@ -35,7 +35,11 @@ export default class ClawSprite extends Phaser.Physics.Arcade.Sprite {
         this.grabbed.body.x = this.body.x + 16;
         this.grabbed.body.y = this.body.y + 32;
         this.grabbed.setGravity(0, 0);
-        this.grabbed.bot.stateMachine.setState('jump');
+        if (this.grabbed === this.scene.player) {
+          this.grabbed.play('jump');
+        } else {
+          this.grabbed.bot.stateMachine.setState('jump');
+        }
       } else {
         this.grabbed = null;
       }

@@ -246,6 +246,12 @@ export default class Player extends Bot {
       this.sprite.setVelocityX(0);
       this.stateMachine.setState('idle');
     }
+    if (this.canOperate) {
+      this.closestClaw = this.sprite.scene.physics.closest(this.sprite, this.sprite.scene.claws);
+      if (this.closestClaw && this.keys.SPACE.isDown) {
+        this.stateMachine.setState('toOperate');
+      }
+    }
   }
 	backwardOnUpdate() {
     if (this.cross.x <= this.sprite.x) {
@@ -279,6 +285,12 @@ export default class Player extends Bot {
     if (this.isNoneDown) {
       this.stateMachine.setState('idle');
     }
+    if (this.canOperate) {
+      this.closestClaw = this.sprite.scene.physics.closest(this.sprite, this.sprite.scene.claws);
+      if (this.closestClaw && this.keys.SPACE.isDown) {
+        this.stateMachine.setState('toOperate');
+      }
+    }
   }
   jumpOnUpdate() {
     super.jumpOnUpdate();
@@ -293,6 +305,12 @@ export default class Player extends Bot {
     }
     if (this.isLeftDown) {
       this.sprite.setVelocityX(-this.speed);
+    }
+    if (this.canOperate) {
+      this.closestClaw = this.sprite.scene.physics.closest(this.sprite, this.sprite.scene.claws);
+      if (this.closestClaw && this.keys.SPACE.isDown) {
+        this.stateMachine.setState('toOperate');
+      }
     }
   }
   crouchOnEnter() {
