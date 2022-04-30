@@ -84,12 +84,12 @@ export default class Player extends Bot {
     this.speed = 160;
     this.maxCooldown = 30;
     this.currentCooldown = 30;
-    this.canJump = false;
+    this.canJump = true;
     this.canRide = false;
     this.canClimb = false;
-    this.canOperate = true;
+    this.canOperate = false;
     this.laser = 'greenLaser';
-    this.cores = ['blueCore', 'greenCore', 'greenCore'];
+    this.cores = ['orangeCore', 'greenCore', 'greenCore'];
     this.coreCounter = this.sprite.scene.add.group();
     this.updateCounter();
   } 

@@ -137,6 +137,7 @@ export default class Bot {
           canJump: true,
           canRide: false,
           canClimb: false,
+          canOperate: false,
           laser: 'greenLaser',
         },
         'yellowCore': {
@@ -147,6 +148,7 @@ export default class Bot {
           canJump: false,
           canRide: true,
           canClimb: false,
+          canOperate: false,
           laser: 'yellowLaser',
         },
         'blueCore': {
@@ -157,7 +159,19 @@ export default class Bot {
           canJump: false,
           canRide: false,
           canClimb: true,
+          canOperate: false,
           laser: 'blueLaser',
+        },
+        'orangeCore': {
+          frame: 78,          
+          speed: 80,
+          maxCooldown: 60,
+          currentCooldown: 60,
+          canJump: false,
+          canRide: false,
+          canClimb: false,
+          canOperate: true,
+          laser: 'orangeLaser',
         },
       }
       this.frame = bots[this.sprite.frame.name].frame;
@@ -167,6 +181,7 @@ export default class Bot {
       this.canJump = bots[this.sprite.frame.name].canJump;
       this.canRide = bots[this.sprite.frame.name].canRide;
       this.canClimb = bots[this.sprite.frame.name].canClimb;
+      this.canOperate = bots[this.sprite.frame.name].canOperate;
       this.laser = bots[this.sprite.frame.name].laser;
       this.sprite.setTexture('bots', this.frame);
       this.createAnimations();

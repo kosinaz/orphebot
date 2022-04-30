@@ -186,6 +186,7 @@
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">sprites/blueCore.png</key>
+            <key type="filename">sprites/orangeCore.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -202,6 +203,7 @@
             </struct>
             <key type="filename">sprites/blueLaser.png</key>
             <key type="filename">sprites/greenLaser.png</key>
+            <key type="filename">sprites/orangeLaser.png</key>
             <key type="filename">sprites/yellowLaser.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

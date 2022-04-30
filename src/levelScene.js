@@ -8,6 +8,7 @@ import ElevatorSprite from './elevatorSprite.js';
 import Arachbot from './arachbot.js';
 import ClawSprite from './clawSprite.js';
 import CraneSprite from './craneSprite.js';
+import Crabot from './crabot.js';
 
 
 export default class LevelScene extends Phaser.Scene {
@@ -150,6 +151,12 @@ export default class LevelScene extends Phaser.Scene {
           let bot = new BotSprite(this, obj.x, obj.y, 'bots', 78);
           this.bots.push(bot); 
           new Arachbot(bot);
+          break;
+        }
+        case 'crabot': {
+          let bot = new BotSprite(this, obj.x, obj.y, 'bots', 0);
+          this.bots.push(bot); 
+          new Crabot(bot)
           break;
         }
         case 'elevator': {

@@ -66,6 +66,18 @@
                  "visible":true,
                  "width":64,
                  "x":3648,
+                 "y":2816
+                }, 
+                {
+                 "gid":169,
+                 "height":128,
+                 "id":105,
+                 "name":"crabot",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":3456,
                  "y":2944
                 }],
          "opacity":1,
@@ -91,7 +103,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":105,
+ "nextobjectid":106,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",

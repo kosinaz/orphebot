@@ -1,20 +1,13 @@
 import Bot from './bot.js';
 
-export default class Elevabot extends Bot {
+export default class Crabot extends Bot {
   constructor(sprite) {
     super(sprite);
-    this.stateMachine.addState('approachForward', {
-      onEnter: this.approachForwardOnEnter,
-      onUpdate: this.approachForwardOnUpdate,
-      onExit: this.approachForwardOnExit,
-    }).addState('approachBackward', {
-      onEnter: this.approachBackwardOnEnter,
-      onUpdate: this.approachBackwardOnUpdate,
-      onExit: this.approachBackwardOnExit,
-    }).addState('call', {
+    this.stateMachine.addState('call', {
       onEnter: this.callOnEnter,
       onUpdate: this.callOnUpdate,
-    }).addState('ride', {
+    });
+    this.stateMachine.addState('ride', {
       onEnter: this.rideOnEnter,
       onUpdate: this.rideOnUpdate,
     });
@@ -22,7 +15,8 @@ export default class Elevabot extends Bot {
     this.speed = 80;
     this.maxCooldown = 60;
     this.currentCooldown = 60;
-    this.cores = ['yellowCore', 'yellowCore', 'yellowCore'];
+    this.cores = ['orangeCore', 'orangeCore', 'orangeCore'];
+    this.closestClaw = this.sprite.scene.physics.closest(this.sprite, this.sprite.scene.claws);
   }
   shoot() {
     if (this.currentCooldown < 0) {
@@ -32,7 +26,7 @@ export default class Elevabot extends Bot {
         this.sprite.y - 12,
         this.target.x,
         this.target.bot.stateMachine.isCurrentState('crouch') ? this.target.y + 20 : this.target.y - 12,
-        'yellowLaser',
+        'orangeLaser',
         false,
       );
     }
@@ -121,12 +115,19 @@ export default class Elevabot extends Bot {
   jumpOnUpdate() {
     super.jumpOnUpdate();
     this.shoot();
+    if (this.closestClaw.grabbed === this.sprite) {
+      this.stateMachine.setState('ride')
+    }
   }
   callOnEnter() {
     this.sprite.play('idle');    
     this.sprite.setVelocityX(0);
-    this.closestElevator = this.sprite.scene.physics.closest(this.sprite, this.sprite.scene.elevators);
-    this.closestElevator.setVelocityY(350);
+    this.closestClaw.setVelocityY(350);
+    if (this.sprite.x > this.closestClaw.x) {
+      this.closestClaw.crane.setVelocityX(350);
+    } else {
+      this.closestClaw.crane.setVelocityX(-350);
+    }
   }
   callOnUpdate() {
     if (this.target.bot.stateMachine.isCurrentState('core')) { 
@@ -136,83 +137,18 @@ export default class Elevabot extends Bot {
       return;
     }
     this.shoot();
-    if (this.closestElevator.y > this.sprite.y) {
-      if (this.closestElevator.x < this.sprite.x) {
-        if (this.targetIsOnLeft()) {
-          this.stateMachine.setState('approachForward');
-        } else {
-          this.stateMachine.setState('approachBackward');
-        }
-      } else {
-        if (this.targetIsOnLeft()) {
-          this.stateMachine.setState('approachBackward');
-        } else {
-          this.stateMachine.setState('approachForward');
-        }
-      }      
+    if (this.closestClaw.grabbed === this.sprite) {
+      this.stateMachine.setState('ride')
     }
-  }
-  approachForwardOnEnter() {
-    super.forwardOnEnter();
-  }
-  approachForwardOnUpdate() {
-    this.sprite.flipX = this.targetIsOnLeft();
-    if (this.sprite.y - 64 < this.target.y) {
-      this.stateMachine.setState('idle');
-    }
-    if (Phaser.Math.Distance.BetweenPoints(this.sprite, this.closestElevator) < 80) {
-      this.stateMachine.setState('ride');
-      return;
-    }
-    if (this.closestElevator.x < this.sprite.x) {
-      this.sprite.setVelocityX(-this.speed);
-      if (!this.targetIsOnLeft()) {
-        this.stateMachine.setState('approachBackward');
-      }
+    if (this.sprite.x > this.closestClaw.x) {
+      this.closestClaw.crane.setVelocityX(350);
     } else {
-      this.sprite.setVelocityX(this.speed);
-      if (this.targetIsOnLeft()) {
-        this.stateMachine.setState('approachBackward');
-      }
-    }      
-  }
-  approachForwardOnExit() { 
-    super.forwardOnExit();   
-  }
-  approachBackwardOnEnter() {
-    super.backwardOnEnter();
-  }
-  approachBackwardOnUpdate() {
-    this.sprite.flipX = this.targetIsOnLeft();
-    if (this.sprite.y - 64 < this.target.y) {
-      this.stateMachine.setState('idle');
+      this.closestClaw.crane.setVelocityX(-350);
     }
-    if (Phaser.Math.Distance.BetweenPoints(this.sprite, this.closestElevator) < 80) {
-      this.stateMachine.setState('ride');
-      return;
-    }
-    if (this.closestElevator.x < this.sprite.x) {
-      this.sprite.setVelocityX(-this.speed);
-      if (this.targetIsOnLeft()) {
-        this.stateMachine.setState('approachForward');
-      }
-    } else {
-      this.sprite.setVelocityX(this.speed);
-      if (!this.targetIsOnLeft()) {
-        this.stateMachine.setState('approachForward');
-      }
-    }      
-  }
-  approachBackwardOnExit() {    
-    super.backwardOnExit();
   }
   rideOnEnter() {
-    let sound = this.sprite.scene.elevatorUpSound;
-    sound.volume = 0.30;
-    sound.play();
-    this.sprite.play('idle');
-    this.sprite.setVelocityX(0);
-    this.closestElevator.setVelocityY(-350);
+    this.closestClaw.crane.setVelocityX(Phaser.Math.RND.pick([350, -350]));
+    this.closestClaw.setVelocityY(Phaser.Math.RND.pick([350, -350]));
   }
   rideOnUpdate() {
     if (this.target.bot.stateMachine.isCurrentState('core')) { 
@@ -222,12 +158,9 @@ export default class Elevabot extends Bot {
       return;
     }
     this.shoot();
-    if (this.sprite.y + 256 < this.target.y) {
-      let sound = this.sprite.scene.elevatorDownSound;
-      sound.volume = 0.30;
-      sound.play();
-      this.closestElevator.setVelocityY(350);
-      this.stateMachine.setState('jump');
+    if (this.currentCooldown < 1) {
+      this.closestClaw.crane.setVelocityX(Phaser.Math.RND.pick([350, -350]));
+      this.closestClaw.setVelocityY(Phaser.Math.RND.pick([350, -350]));
     }
   }
 }
