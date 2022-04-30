@@ -56,6 +56,18 @@ export default class Player extends Bot {
       onEnter: this.onRightToUpOnEnter,
       onUpdate: this.onRightToUpOnUpdate,
     });
+    this.stateMachine.addState('toOperate', {
+      onEnter: this.toOperateOnEnter,
+      onUpdate: this.toOperateOnUpdate,
+    });
+    this.stateMachine.addState('operate', {
+      onEnter: this.operateOnEnter,
+      onUpdate: this.operateOnUpdate,
+    });
+    this.stateMachine.addState('fromOperate', {
+      onEnter: this.fromOperateOnEnter,
+      onUpdate: this.fromOperateOnUpdate,
+    });
     this.keys = this.sprite.scene.input.keyboard.addKeys('UP,LEFT,DOWN,RIGHT, W,A,S,D,R,SPACE');    
     this.stickKeys = this.sprite.scene.moveStick.createCursorKeys();
     this.keys.R.on('up', () => {
@@ -72,9 +84,10 @@ export default class Player extends Bot {
     this.speed = 160;
     this.maxCooldown = 30;
     this.currentCooldown = 30;
-    this.canJump = true;
+    this.canJump = false;
     this.canRide = false;
     this.canClimb = false;
+    this.canOperate = true;
     this.laser = 'greenLaser';
     this.cores = ['blueCore', 'greenCore', 'greenCore'];
     this.coreCounter = this.sprite.scene.add.group();
@@ -102,23 +115,6 @@ export default class Player extends Bot {
       sound.volume = 0.30;
       sound.play();
     } 
-    let closestClaw = this.sprite.scene.physics.closest(this.sprite, this.sprite.scene.claws);
-    if (closestClaw) {
-      if (this.isDownDown) {
-        closestClaw.setVelocityY(350);
-      }
-      if (this.keys.SPACE.isDown) {
-        closestClaw.release();
-      } else if (this.isUpDown) {
-        closestClaw.setVelocityY(-350); 
-      }
-      if (this.isLeftDown) {
-        closestClaw.crane.setVelocityX(-350);
-      }
-      if (this.isRightDown) { 
-        closestClaw.crane.setVelocityX(350); 
-      }
-    }
   }
   updateCounter() {
     this.coreCounter.clear(true);
@@ -209,6 +205,12 @@ export default class Player extends Bot {
     if (this.isUpDown && this.canJump) {
       this.sprite.setVelocityY(-600);  
       this.stateMachine.setState('jump');   
+    }
+    if (this.canOperate) {
+      this.closestClaw = this.sprite.scene.physics.closest(this.sprite, this.sprite.scene.claws);
+      if (this.closestClaw && this.keys.SPACE.isDown) {
+        this.stateMachine.setState('toOperate');
+      }
     }
   }
 	forwardOnUpdate() {
@@ -527,6 +529,40 @@ export default class Player extends Bot {
       this.stateMachine.setState('idleOnRight');
     }
   }
+  toOperateOnEnter()	{
+		this.sprite.play('idle');
+    this.sprite.setVelocityX(0);
+	}
+  toOperateOnUpdate()	{
+    if (this.keys.SPACE.isUp) {
+		  this.stateMachine.setState('operate');
+    }
+	}
+  operateOnEnter()	{
+	}
+  operateOnUpdate() {
+    if (this.keys.SPACE.isDown) {
+      this.closestClaw.release();
+      this.stateMachine.setState('fromOperate');
+    } else if (this.isUpDown) {
+      this.closestClaw.setVelocityY(-350); 
+    } else if (this.isDownDown) {
+      this.closestClaw.setVelocityY(350);
+    } else if (this.isLeftDown) {
+      this.closestClaw.setVelocityX(-350);
+      this.closestClaw.crane.setVelocityX(-350);
+    } else if (this.isRightDown) { 
+      this.closestClaw.setVelocityX(350); 
+      this.closestClaw.crane.setVelocityX(350); 
+    }
+  }
+  fromOperateOnEnter()	{
+	}
+  fromOperateOnUpdate()	{
+    if (this.keys.SPACE.isUp) {
+		  this.stateMachine.setState('idle');
+    }
+	}
   createAnimations() {
     super.createAnimations();
     this.sprite.anims.remove('crouch');

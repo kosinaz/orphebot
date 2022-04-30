@@ -5,7 +5,10 @@ export default class ClawSprite extends Phaser.Physics.Arcade.Sprite {
     super(...args, 'sprites', 'claw');
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);
-    this.scene.physics.add.collider(this, this.scene.fg);
+    this.scene.physics.add.collider(this, this.scene.fg, () => {
+      this.crane.setVelocityX(0);
+      this.crane.body.x = this.body.x;
+    });
     this.scene.physics.add.collider(this, this.scene.cranes);
     this.scene.physics.add.overlap(this, this.scene.player, (claw, bot) => {
       if (!this.grabbed && this.released !== bot) {
@@ -18,7 +21,8 @@ export default class ClawSprite extends Phaser.Physics.Arcade.Sprite {
       }
     });
     this.x += 32;
-    this.y -= 32;
+    this.y -= 64;
+    this.counter = 0;
   }
   update() {
     this.counter -= 1;
@@ -41,10 +45,10 @@ export default class ClawSprite extends Phaser.Physics.Arcade.Sprite {
     this.rope.height = this.y - this.crane.y - 96;
   }
   release() {
+    this.counter = 20;
     if (!this.grabbed) {
       return;
     }
-    this.counter = 20;
     this.released = this.grabbed;
     this.grabbed = null;
     this.released.setGravity(0, 2100);
