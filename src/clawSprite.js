@@ -6,8 +6,12 @@ export default class ClawSprite extends Phaser.Physics.Arcade.Sprite {
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);
     this.scene.physics.add.collider(this, this.scene.fg, () => {
-      this.crane.setVelocityX(0);
-      this.crane.body.x = this.body.x;
+      if (this.grabbed && this.grabbed.bot.constructor.name === 'Crabot') {
+        this.crane.setVelocityY(-350);
+      } else {
+        this.crane.setVelocityX(0);
+        this.crane.body.x = this.body.x;
+      }
     });
     this.scene.physics.add.collider(this, this.scene.cranes);
     this.scene.physics.add.overlap(this, this.scene.player, (claw, bot) => {
@@ -37,8 +41,12 @@ export default class ClawSprite extends Phaser.Physics.Arcade.Sprite {
         this.grabbed.setGravity(0, 0);
         if (this.grabbed === this.scene.player || this.grabbed.bot.stateMachine.isCurrentState('ride')) {
           this.grabbed.play('jump');
-        } else {
-          this.grabbed.bot.stateMachine.setState('jump');
+        } else if (!this.grabbed.bot.stateMachine.isCurrentState('dead')) {
+          if (this.grabbed.bot.stateMachine.isCurrentState('core')) {
+            this.release();
+          } else {
+            this.grabbed.bot.stateMachine.setState('jump');
+          }
         }
       } else {
         this.grabbed = null;

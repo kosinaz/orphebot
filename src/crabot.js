@@ -120,13 +120,16 @@ export default class Crabot extends Bot {
     }
   }
   callOnEnter() {
-    this.sprite.play('idle');    
     this.sprite.setVelocityX(0);
     this.closestClaw.setVelocityY(350);
     if (this.sprite.x > this.closestClaw.x) {
       this.closestClaw.crane.setVelocityX(350);
+      this.sprite.setVelocityX(-this.speed);
+      this.sprite.playReverse('walk');
     } else {
       this.closestClaw.crane.setVelocityX(-350);
+      this.sprite.setVelocityX(this.speed);
+      this.sprite.play('walk');
     }
   }
   callOnUpdate() {
@@ -142,13 +145,17 @@ export default class Crabot extends Bot {
     }
     if (this.sprite.x > this.closestClaw.x) {
       this.closestClaw.crane.setVelocityX(350);
+      this.sprite.setVelocityX(-this.speed);
+      this.sprite.playReverse('walk', true);
     } else {
       this.closestClaw.crane.setVelocityX(-350);
+      this.sprite.setVelocityX(this.speed);
+      this.sprite.play('walk', true);
     }
   }
   rideOnEnter() {
     this.closestClaw.crane.setVelocityX(Phaser.Math.RND.pick([350, -350]));
-    this.closestClaw.setVelocityY(Phaser.Math.RND.pick([350, -350]));
+    this.closestClaw.setVelocityY(-350);
   }
   rideOnUpdate() {
     if (this.target.bot.stateMachine.isCurrentState('core')) { 
@@ -158,9 +165,23 @@ export default class Crabot extends Bot {
       return;
     }
     this.shoot();
-    if (this.currentCooldown < 1) {
-      this.closestClaw.crane.setVelocityX(Phaser.Math.RND.pick([350, -350]));
-      this.closestClaw.setVelocityY(Phaser.Math.RND.pick([350, -350]));
+    if (this.closestClaw.body.blocked.left) {
+      this.closestClaw.crane.setVelocityX(350);      
+    }
+    if (this.closestClaw.body.blocked.right) {
+      this.closestClaw.crane.setVelocityX(-350);      
+    }
+    if (this.closestClaw.body.blocked.up) {
+      this.closestClaw.setVelocityY(350);      
+    }
+    if (this.closestClaw.body.blocked.down) {
+      this.closestClaw.setVelocityY(-350);      
+    }
+    if (this.closestClaw.crane.body.blocked.left) {
+      this.closestClaw.crane.setVelocityX(350);      
+    }
+    if (this.closestClaw.crane.body.blocked.right) {
+      this.closestClaw.crane.setVelocityX(-350);      
     }
   }
 }

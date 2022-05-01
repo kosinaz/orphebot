@@ -163,7 +163,7 @@ export default class Bot {
           laser: 'blueLaser',
         },
         'orangeCore': {
-          frame: 78,          
+          frame: 0,          
           speed: 80,
           maxCooldown: 60,
           currentCooldown: 60,
