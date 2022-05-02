@@ -7,8 +7,9 @@ export default class ClawSprite extends Phaser.Physics.Arcade.Sprite {
     this.scene.physics.add.existing(this);
     this.scene.physics.add.collider(this, this.scene.fg, () => {
       if (this.grabbed && this.grabbed.bot.constructor.name === 'Crabot') {
-        this.crane.setVelocityY(-350);
-      } else {
+        return;
+      }
+      if (this.body.blocked.left || this.body.blocked.right) {
         this.crane.setVelocityX(0);
         this.crane.body.x = this.body.x;
       }
@@ -39,11 +40,13 @@ export default class ClawSprite extends Phaser.Physics.Arcade.Sprite {
         this.grabbed.body.x = this.body.x + 16;
         this.grabbed.body.y = this.body.y + 32;
         this.grabbed.setGravity(0, 0);
-        if (this.grabbed === this.scene.player || this.grabbed.bot.stateMachine.isCurrentState('ride')) {
+        if (this.grabbed.bot.stateMachine.isCurrentState('ride')) {
           this.grabbed.play('jump');
         } else if (!this.grabbed.bot.stateMachine.isCurrentState('dead')) {
           if (this.grabbed.bot.stateMachine.isCurrentState('core')) {
             this.release();
+          } else if (this.grabbed === this.scene.player) {
+            this.grabbed.play('jump');
           } else {
             this.grabbed.bot.stateMachine.setState('jump');
           }
@@ -57,10 +60,11 @@ export default class ClawSprite extends Phaser.Physics.Arcade.Sprite {
     this.rope.height = this.y - this.crane.y - 96;
   }
   release() {
-    this.counter = 20;
+    this.counter = 50;
     if (!this.grabbed) {
       return;
     }
+    this.setVelocityY(-350);
     this.released = this.grabbed;
     this.grabbed = null;
     this.released.setGravity(0, 2100);

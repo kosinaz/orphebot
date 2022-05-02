@@ -120,55 +120,37 @@ export default class Crabot extends Bot {
     }
   }
   callOnEnter() {
-    this.sprite.setVelocityX(0);
+    this.closestClaw = this.sprite.scene.physics.closest(this.sprite, this.sprite.scene.claws);
+  }
+  callOnUpdate() {
     this.closestClaw.setVelocityY(350);
     if (this.sprite.x > this.closestClaw.x) {
       this.closestClaw.crane.setVelocityX(350);
-      this.sprite.setVelocityX(-this.speed);
-      this.sprite.playReverse('walk');
     } else {
       this.closestClaw.crane.setVelocityX(-350);
-      this.sprite.setVelocityX(this.speed);
-      this.sprite.play('walk');
     }
-  }
-  callOnUpdate() {
-    if (this.target.bot.stateMachine.isCurrentState('core')) { 
-      return;
-    }
-    if (!this.isVisible()) {
-      return;
-    }
-    this.shoot();
-    if (this.closestClaw.grabbed === this.sprite) {
-      this.stateMachine.setState('ride')
-    }
-    if (this.sprite.x > this.closestClaw.x) {
-      this.closestClaw.crane.setVelocityX(350);
-      this.sprite.setVelocityX(-this.speed);
-      this.sprite.playReverse('walk', true);
-    } else {
-      this.closestClaw.crane.setVelocityX(-350);
-      this.sprite.setVelocityX(this.speed);
-      this.sprite.play('walk', true);
-    }
+    this.stateMachine.setState('idle');
   }
   rideOnEnter() {
-    this.closestClaw.crane.setVelocityX(Phaser.Math.RND.pick([350, -350]));
+    let dir = Phaser.Math.RND.pick([350, -350]);
+    this.closestClaw.setVelocityX(dir);
+    this.closestClaw.crane.setVelocityX(dir);
     this.closestClaw.setVelocityY(-350);
+    this.sprite.play('jump');
   }
   rideOnUpdate() {
     if (this.target.bot.stateMachine.isCurrentState('core')) { 
       return;
     }    
-    if (!this.isVisible()) {
-      return;
-    }
-    this.shoot();
+    if (this.isVisible()) {
+      this.shoot();
+    }    
     if (this.closestClaw.body.blocked.left) {
-      this.closestClaw.crane.setVelocityX(350);      
+      this.closestClaw.setVelocityX(350);   
+      this.closestClaw.crane.setVelocityX(350);   
     }
     if (this.closestClaw.body.blocked.right) {
+      this.closestClaw.setVelocityX(-350);      
       this.closestClaw.crane.setVelocityX(-350);      
     }
     if (this.closestClaw.body.blocked.up) {
@@ -178,9 +160,11 @@ export default class Crabot extends Bot {
       this.closestClaw.setVelocityY(-350);      
     }
     if (this.closestClaw.crane.body.blocked.left) {
+      this.closestClaw.setVelocityX(350);      
       this.closestClaw.crane.setVelocityX(350);      
     }
     if (this.closestClaw.crane.body.blocked.right) {
+      this.closestClaw.setVelocityX(-350);      
       this.closestClaw.crane.setVelocityX(-350);      
     }
   }
