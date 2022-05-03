@@ -54,6 +54,24 @@ export default class LevelScene extends Phaser.Scene {
       this.moveStick.visible = !this.moveStick.visible;
       this.aimStick.visible = !this.aimStick.visible;
     }, this);
+    this.operate = this.add.image(340, 910, 'sprites', 'operate');
+    this.operate.setScrollFactor(0);
+    this.operate.setDepth(2);
+    this.operate.setInteractive();
+    this.operate.on('pointerup', () => {
+      if (this.player.bot.canOperate) {
+        let closestClaw = this.physics.closest(this.player, this.claws);
+        if (closestClaw) {
+          if (this.player.bot.stateMachine.isCurrentState('operate')) {
+            closestClaw.release();
+            this.player.bot.stateMachine.setState('fromOperate');
+          } else {
+            this.player.bot.stateMachine.setState('toOperate');
+          }
+        }
+      }
+    }, this);
+    this.canOperate = false;
     this.keys = this.input.keyboard.addKeys('ESC');
     this.keys.ESC.on('up', () => {
       this.scene.pause();
@@ -178,7 +196,7 @@ export default class LevelScene extends Phaser.Scene {
             this.portalSound = this.sound.add('portal');
             this.portalSound.play();
             this.scene.restart({
-              level: level % 2 + 1,
+              level: level % 3 + 1,
               cores: this.player.bot.cores,
             });
           });
@@ -210,6 +228,7 @@ export default class LevelScene extends Phaser.Scene {
     });
     this.claws.forEach(claw => {
       claw.update();
-    })
+    });
+    this.operate.visible = this.player.bot.canOperate && this.moveStick.visible;
   }
 }

@@ -89,7 +89,7 @@ export default class Player extends Bot {
     this.canClimb = false;
     this.canOperate = false;
     this.laser = 'greenLaser';
-    this.cores = ['orangeCore', 'greenCore', 'greenCore'];
+    this.cores = ['greenCore', 'greenCore', 'greenCore'];
     this.coreCounter = this.sprite.scene.add.group();
     this.updateCounter();
   } 

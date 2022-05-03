@@ -37,7 +37,7 @@ export default class StateMachine {
 			return
 		}
 		this.isChangingState = true;
-		console.log(`[StateMachine (${this.id})] change from ${this.currentState ? this.currentState.name : 'none'} to ${name}`);
+		// console.log(`[StateMachine (${this.id})] change from ${this.currentState ? this.currentState.name : 'none'} to ${name}`);
 		if (this.currentState && this.currentState.onExit) {
 			this.currentState.onExit();
 		}
