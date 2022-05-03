@@ -47,13 +47,36 @@ export default class LevelScene extends Phaser.Scene {
       this.scene.pause();
       this.scene.run('PauseScene');
     }, this);
-    const stick = this.add.image(1818, 40, 'sprites', 'stick');
+    const core = this.add.image(1800, 40, 'sprites', 'core');
+    core.setScrollFactor(0);
+    core.setDepth(2);
+    core.setInteractive();
+    core.on('pointerup', () => {
+      if (this.player.bot.stateMachine.isCurrentState('core')
+        || this.player.bot.stateMachine.isCurrentState('dead')) {
+        return;
+      }
+      this.player.bot.health = 0;
+      this.player.bot.stateMachine.setState('core');
+    }, this);
+    const stick = this.add.image(1720, 40, 'sprites', 'stick');
     stick.setScrollFactor(0);
     stick.setDepth(2);
     stick.setInteractive();
     stick.on('pointerup', () => {
       this.moveStick.visible = !this.moveStick.visible;
       this.aimStick.visible = !this.aimStick.visible;
+    }, this);
+    const restart = this.add.image(1640, 40, 'sprites', 'restart');
+    restart.setScrollFactor(0);
+    restart.setDepth(2);
+    restart.setInteractive();
+    restart.on('pointerup', () => {
+      this.sound.stopAll();
+      this.scene.restart({
+        level: level % 3,
+        cores: args.cores,
+      });
     }, this);
     this.operate = this.add.image(340, 910, 'sprites', 'operate');
     this.operate.setScrollFactor(0);
