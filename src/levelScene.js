@@ -38,6 +38,7 @@ export default class LevelScene extends Phaser.Scene {
     this.load.plugin('rexvirtualjoystickplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js', true);
   }
   create(args) {
+    this.input.addPointer(1);
     const pause = this.add.image(1880, 40, 'sprites', 'pause');
     pause.setScrollFactor(0);
     pause.setDepth(2);
